@@ -1,0 +1,154 @@
+[
+    {
+        "value": "alcohol-smoking",
+        "label": "Alcohol and Smoking Products"
+    },
+    {
+        "value": "banking",
+        "label": "Banking"
+    },
+    {
+        "value": "business",
+        "label": "Business"
+    },
+    {
+        "value": "crypto",
+        "label": "Crypto"
+    },
+    {
+        "value": "crypto-casino",
+        "label": "Crypto Casino"
+    },
+    {
+        "value": "dating",
+        "label": "Dating"
+    },
+    {
+        "value": "ecommerce",
+        "label": "E-commerce"
+    },
+    {
+        "value": "education",
+        "label": "Education"
+    },
+    {
+        "value": "entertainments",
+        "label": "Entertainments"
+    },
+    {
+        "value": "gaming-casual",
+        "label": "Gaming - Casual"
+    },
+    {
+        "value": "gaming-hyper-casual",
+        "label": "Gaming - Hyper Casual"
+    },
+    {
+        "value": "gaming-puzzle",
+        "label": "Gaming - Puzzle"
+    },
+    {
+        "value": "gaming-rpg",
+        "label": "Gaming - RPG"
+    },
+    {
+        "value": "gaming-shooter",
+        "label": "Gaming - Shooter"
+    },
+    {
+        "value": "gaming-social-casino",
+        "label": "Gaming - Social Casino"
+    },
+    {
+        "value": "gaming-sports",
+        "label": "Gaming - Sports"
+    },
+    {
+        "value": "gaming-strategy",
+        "label": "Gaming - Strategy"
+    },
+    {
+        "value": "health",
+        "label": "Health"
+    },
+    {
+        "value": "insurance",
+        "label": "Insurance"
+    },
+    {
+        "value": "investing",
+        "label": "Investing"
+    },
+    {
+        "value": "kids",
+        "label": "Kids"
+    },
+    {
+        "value": "lifestyle",
+        "label": "Lifestyle"
+    },
+    {
+        "value": "lotto",
+        "label": "Lotto"
+    },
+    {
+        "value": "market-research",
+        "label": "Market Research"
+    },
+    {
+        "value": "misc",
+        "label": "Misc"
+    },
+    {
+        "value": "money-transfer",
+        "label": "Money Transfer"
+    },
+    {
+        "value": "music-audio",
+        "label": "Music and Audio"
+    },
+    {
+        "value": "news",
+        "label": "News"
+    },
+    {
+        "value": "real-money-casino",
+        "label": "Real Money Casino"
+    },
+    {
+        "value": "rewards",
+        "label": "Rewards"
+    },
+    {
+        "value": "social-media",
+        "label": "Social Media"
+    },
+    {
+        "value": "sport",
+        "label": "Sport"
+    },
+    {
+        "value": "sports-betting",
+        "label": "Sports Betting"
+    },
+    {
+        "value": "streaming",
+        "label": "Streaming Services"
+    },
+    {
+        "value": "sweepstakes",
+        "label": "Sweepstakes"
+    },
+    {
+        "value": "technology",
+        "label": "Technology"
+    },
+    {
+        "value": "video",
+        "label": "Video"
+    },
+    {
+        "value": "vpn",
+        "label": "VPN Services"
+    }
+]
