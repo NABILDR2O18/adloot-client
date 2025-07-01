@@ -31,6 +31,7 @@ import {
   BarChart,
   Globe,
   MessageSquare,
+  GraduationCap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
@@ -69,6 +70,7 @@ export default function AdminLayout() {
       reports: "System Reports",
       users: "User Management",
       settings: "System Settings",
+      career: "Career Opportunities",
     };
 
     if (lastSegment && titleMap[lastSegment]) {
@@ -264,6 +266,27 @@ export default function AdminLayout() {
                     >
                       <DollarSign size={20} />
                       <span>Transaction</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroup>
+
+            <SidebarGroup>
+              <SidebarGroupLabel className="px-4">Career</SidebarGroupLabel>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link
+                      to="/admin/jobs"
+                      className={
+                        isActivePath("/admin/jobs")
+                          ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                          : ""
+                      }
+                    >
+                      <GraduationCap size={20} />
+                      <span>Jobs</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

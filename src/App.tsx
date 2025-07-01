@@ -99,6 +99,9 @@ import DepositDetails from "./pages/admin/DepositDetails";
 import TransactionManagement from "./pages/admin/TransactionManagement";
 import OfferTransactionDetails from "./pages/admin/TransactionDetails";
 import ComingSoon from "./pages/docs/ComingSoon";
+import JobCreate from "./pages/admin/JobCreate";
+import JobsManagement from "./pages/admin/JobsManagement";
+import JobDetails from "./pages/admin/JobDetails";
 
 const AppRoutes = () => {
   return (
@@ -163,6 +166,10 @@ const AppRoutes = () => {
           <Route path="users" element={<UsersManagement />} />
           <Route path="support" element={<AdminSupportTickets />} />
           <Route path="support/:id" element={<SupportTicketDetails />} />
+          <Route path="jobs" element={<JobsManagement />} />
+          <Route path="jobs/create" element={<JobCreate />} />
+          <Route path="jobs/:id" element={<JobDetails />} />
+          <Route path="jobs/edit/:id" element={<JobCreate />} />
           <Route path="settings" element={<SystemSettings />} />
           <Route path="profile" element={<AdminProfile />} />
         </Route>
