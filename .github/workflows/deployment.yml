@@ -1,0 +1,44 @@
+name: Adloot Frontend Deployment
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:    
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Setup Nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.17.0
+      - name: Install npm dependencies
+        run: npm install --legacy-peer-deps
+        
+      - name: Build application
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
+          CI="" npm run build
+
+      - name: Deploy
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.SSH_HOST }}
+          REMOTE_USER: ${{ secrets.USERNAME }}
+          TARGET: "adloot_frontend/"
+      - name: executing remote ssh commands using ssh key
+        uses: appleboy/ssh-action@v0.1.9
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22 
+          script: |
+            cd adloot_frontend/
+            pm2 restart adloot_frontend
