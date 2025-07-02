@@ -206,6 +206,7 @@ export default function Offerwall() {
         const response = await api.post("/public/wall/offers/clicked", {
           apiKey: placementID,
           userId: sid,
+          ip: location?.ip,
         }); // your endpoint here
         if (response.status === 200) {
           setOffers(response?.data?.data?.offers);
@@ -230,6 +231,7 @@ export default function Offerwall() {
         const response = await api.post("/public/wall/offers/rewarded", {
           apiKey: placementID,
           userId: sid,
+          ip: location?.ip,
         }); // your endpoint here
         if (response.status === 200) {
           setOffers(response?.data?.data?.offers);
