@@ -11,6 +11,7 @@ const OfferWallPreviewRedirect = () => {
   const userId = searchParams.get("user") || "";
   const country = searchParams.get("country") || "";
   const origin = searchParams.get("origin") || "";
+  const ip = searchParams.get("ip") || "";
   const [error, setError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
@@ -25,6 +26,7 @@ const OfferWallPreviewRedirect = () => {
             userId,
             country,
             origin,
+            ip,
           }
         );
         if (response.status === 200) {
@@ -44,7 +46,7 @@ const OfferWallPreviewRedirect = () => {
     };
 
     postTracking();
-  }, [apiKey, country, offerId, origin, userId]);
+  }, [apiKey, country, offerId, origin, userId, ip]);
 
   return (
     <div className="flex justify-center items-center h-64">

@@ -41,7 +41,9 @@ export function OfferPreviewModal({
 
   const redirectUrl = `${import.meta.env.VITE_BASE_URL}/wall/${
     offer?.id
-  }?placementId=${apiKey}&user=${userId}&country=${location?.country?.toLowerCase()}&origin=offerwall`;
+  }?placementId=${apiKey}&user=${userId}&country=${location?.country?.toLowerCase()}&origin=offerwall&ip=${
+    location?.ip
+  }`;
 
   const handleSendLink = async () => {
     // Simple email regex
@@ -58,6 +60,7 @@ export function OfferPreviewModal({
         apiKey,
         userId,
         redirectUrl,
+        ip: location?.ip,
       });
       if (response.status === 200) {
         toast.success(
