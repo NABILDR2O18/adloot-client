@@ -280,13 +280,28 @@ export default function AdminLayout() {
                     <Link
                       to="/admin/jobs"
                       className={
-                        isActivePath("/admin/jobs")
+                        location.pathname === "/admin/jobs"
                           ? "bg-sidebar-accent text-sidebar-accent-foreground"
                           : ""
                       }
                     >
                       <GraduationCap size={20} />
                       <span>Jobs</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link
+                      to="/admin/jobs/applications"
+                      className={
+                        location.pathname === "/admin/jobs/applications"
+                          ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                          : ""
+                      }
+                    >
+                      <GraduationCap size={20} />
+                      <span>Applications</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

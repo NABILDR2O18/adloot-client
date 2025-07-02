@@ -33,7 +33,7 @@ export function AppDetailsModal({
       });
   };
   const wallUrl = app?.api_key
-    ? `${import.meta.env.VITE_WALL_URL}/wall?placementID=${
+    ? `${import.meta.env.VITE_BASE_URL}/wall?placementID=${
         app?.api_key
       }&sid={USER_ID}`
     : "";

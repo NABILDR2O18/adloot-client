@@ -53,7 +53,7 @@ function parseSimpleTrackingUrl(url: string) {
 
 const DEFAULT_PARAMS = [
   { key: "click_id", value: "click_id" }, // always present
-  { label: "{event_token}", value: "event_token" }, // always present
+  { label: "event_token", value: "event_token" }, // always present
   { key: "country_code", value: "country_code" },
   { key: "device_id", value: "device_id" },
   { key: "user_id", value: "user_id" },

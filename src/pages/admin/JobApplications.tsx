@@ -25,27 +25,28 @@ import {
   AlertCircle,
   Ban,
   CheckCircle,
-  Edit,
+  Download,
   EyeIcon,
   Loader2,
   XCircle,
 } from "lucide-react";
 
-type EmploymentType = "Full time" | "Part time" | "Contract" | "Internship";
-type JobStatus = "draft" | "open" | "closed";
-
-export interface IJob {
+export type IJobApplication = {
   id: number;
-  title: string;
-  description: string;
-  location: string;
-  salary_min: number;
-  salary_max: number;
-  employment_type: EmploymentType;
-  status: JobStatus;
-  created_at: string; // ISO date string
-  updated_at: string; // ISO date string
-}
+  job_id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  cover_letter: string;
+  resume_url: string;
+  created_at: string; // ISO date string, or use Date if parsing it
+  job_title: string;
+  job_description: string;
+  job_location: string;
+  job_employment_type: "Full time" | "Part time" | "Contract" | string; // enum if possible
+  job_status: "open" | "closed" | string; // enum if possible
+};
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const getJobStatusBadge = (status: string) => {
@@ -76,8 +77,8 @@ export const getJobStatusBadge = (status: string) => {
   }
 };
 
-export default function JobsManagement() {
-  const [jobs, setJobs] = useState<IJob[]>([]);
+export default function JobApplications() {
+  const [applications, setApplications] = useState<IJobApplication[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
@@ -87,13 +88,13 @@ export default function JobsManagement() {
   const fetchJobs = async () => {
     setLoading(true);
     try {
-      const res = await api.get("/admin/career/jobs", {
+      const res = await api.get("/admin/career/jobs/applications/list", {
         params: { page: currentPage, limit: 20 },
       });
-      setJobs(res.data.data.jobs);
+      setApplications(res.data.data.applications);
       setTotalPages(res.data.data.pagination.totalPages);
     } catch {
-      setJobs([]);
+      setApplications([]);
     } finally {
       setLoading(false);
     }
@@ -110,59 +111,51 @@ export default function JobsManagement() {
 
   return (
     <section>
-      <div className="flex justify-end">
-        <Button
-          className="bg-purple-600 mb-4 hover:bg-purple-500"
-          onClick={() => navigate("/admin/jobs/create")}
-        >
-          Add Job
-        </Button>
-      </div>
       <Card>
         <CardContent className="pt-8">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Title</TableHead>
-                <TableHead>Location</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>Applicant</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>CV/Resume</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {!loading &&
-                jobs?.length > 0 &&
-                jobs?.map((job) => (
-                  <TableRow key={job.id}>
-                    <TableCell>{job.title}</TableCell>
-                    <TableCell>{job.location || "-"}</TableCell>
-                    <TableCell>{job.employment_type || "-"}</TableCell>
+                applications?.length > 0 &&
+                applications?.map((application) => (
+                  <TableRow key={application.id}>
+                    <TableCell>{application?.job_title}</TableCell>
+                    <TableCell>{`${application?.first_name} ${application?.last_name}`}</TableCell>
+                    <TableCell>{application?.email}</TableCell>
                     <TableCell>
-                      {format(new Date(job.created_at), "Pp")}
+                      <Button size={"icon"} variant="outline">
+                        <a
+                          href={application.resume_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Download />
+                        </a>
+                      </Button>
                     </TableCell>
-                    <TableCell>{getJobStatusBadge(job.status)}</TableCell>
-
                     <TableCell className="flex items-center gap-2">
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => navigate(`/admin/jobs/${job.id}`)}
+                        onClick={() =>
+                          navigate(`/admin/jobs/applications/${application.id}`)
+                        }
                       >
                         <EyeIcon />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => navigate(`/admin/jobs/edit/${job.id}`)}
-                      >
-                        <Edit />
                       </Button>
                     </TableCell>
                   </TableRow>
                 ))}
-              {!loading && jobs?.length === 0 && (
+              {!loading && applications?.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center">
                     <div className="flex flex-col items-center">

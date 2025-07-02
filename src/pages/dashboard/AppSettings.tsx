@@ -691,7 +691,11 @@ export default function AppSettings() {
                         </Label>
                         <div className="flex items-center relative">
                           <Input
-                            value={`https://wall.adloot.com/?placementID=${formData.apiKey}&sid={USER_ID}`}
+                            value={`${
+                              import.meta.env.VITE_BASE_URL
+                            }/wall?placementID=${
+                              formData.apiKey
+                            }&sid={USER_ID}`}
                             readOnly
                             className="pr-10 font-mono text-sm"
                           />
@@ -702,7 +706,11 @@ export default function AppSettings() {
                             className="absolute right-0"
                             onClick={() =>
                               copyToClipboard(
-                                `https://wall.adloot.com/?placementID=${formData.apiKey}&sid={USER_ID}`,
+                                `${
+                                  import.meta.env.VITE_BASE_URL
+                                }/wall?placementID=${
+                                  formData.apiKey
+                                }&sid={USER_ID}`,
                                 "Integration link copied to clipboard"
                               )
                             }
@@ -721,7 +729,11 @@ export default function AppSettings() {
                         </Label>
                         <div className="flex items-center relative">
                           <Input
-                            value={`<iframe title="Adloot Offer Wall" allow="clipboard-write" src="https://wall.adloot.com/?placementID=${formData.apiKey}&sid={USER_ID}" />`}
+                            value={`<iframe title="Adloot Offer Wall" allow="clipboard-write" src="${
+                              import.meta.env.VITE_BASE_URL
+                            }/wall?placementID=${
+                              formData.apiKey
+                            }&sid={USER_ID}" />`}
                             readOnly
                             className="pr-10 font-mono text-sm"
                           />
@@ -732,7 +744,11 @@ export default function AppSettings() {
                             className="absolute right-0"
                             onClick={() =>
                               copyToClipboard(
-                                `<iframe title="Adloot Offer Wall" allow="clipboard-write" src="https://wall.adloot.com/?placementID=${formData.apiKey}&sid={USER_ID}" />`,
+                                `<iframe title="Adloot Offer Wall" allow="clipboard-write" src="${
+                                  import.meta.env.VITE_BASE_URL
+                                }/wall?placementID=${
+                                  formData.apiKey
+                                }&sid={USER_ID}" />`,
                                 "iFrame code copied to clipboard"
                               )
                             }

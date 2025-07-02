@@ -102,6 +102,9 @@ import ComingSoon from "./pages/docs/ComingSoon";
 import JobCreate from "./pages/admin/JobCreate";
 import JobsManagement from "./pages/admin/JobsManagement";
 import JobDetails from "./pages/admin/JobDetails";
+import JobApply from "./pages/JobApply";
+import JobApplications from "./pages/admin/JobApplications";
+import JobApplicationDetails from "./pages/admin/JobApplicationDetails";
 
 const AppRoutes = () => {
   return (
@@ -119,6 +122,7 @@ const AppRoutes = () => {
         <Route path="/faq" element={<FAQ />} />
         <Route path="/about" element={<About />} />
         <Route path="/careers" element={<Careers />} />
+        <Route path="/careers/job/apply/:id" element={<JobApply />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/help" element={<HelpCenter />} />
 
@@ -170,6 +174,11 @@ const AppRoutes = () => {
           <Route path="jobs/create" element={<JobCreate />} />
           <Route path="jobs/:id" element={<JobDetails />} />
           <Route path="jobs/edit/:id" element={<JobCreate />} />
+          <Route path="jobs/applications" element={<JobApplications />} />
+          <Route
+            path="jobs/applications/:id"
+            element={<JobApplicationDetails />}
+          />
           <Route path="settings" element={<SystemSettings />} />
           <Route path="profile" element={<AdminProfile />} />
         </Route>

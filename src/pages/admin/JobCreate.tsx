@@ -46,14 +46,25 @@ export default function JobCreate() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const isEdit = !!id;
+  const [getLoading, setGetLoading] = useState(false);
 
   useEffect(() => {
     if (isEdit) {
-      api
-        .get(`/admin/career/jobs/${id}`)
-        .then((res) => setJob(res.data.data.job));
+      setGetLoading(true);
+      api.get(`/admin/career/jobs/${id}`).then((res) => {
+        setJob(res.data.data.job);
+        setGetLoading(false);
+      });
     }
   }, [id, isEdit]);
+
+  if (isEdit && getLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   const handleChange = (
     e:
