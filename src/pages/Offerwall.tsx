@@ -187,6 +187,7 @@ export default function Offerwall() {
           device,
           sort: payout,
           isLootably: true,
+          ip: location?.ip,
         }); // your endpoint here
         if (response.status === 200) {
           setOffers(response?.data?.data?.offers);
