@@ -502,7 +502,7 @@ export default function Offerwall() {
               </Button>
             )}
           </div>
-          {offers?.length > 0 ? (
+          {offers?.length > 0 || lootablyOffers?.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
               {offers?.map((offer) => (
                 <Card
@@ -691,7 +691,7 @@ export default function Offerwall() {
         >
           <h1 className="font-semibold mb-4">My Offers</h1>
 
-          {offers?.length > 0 ? (
+          {offers?.length > 0 || lootablyOffers?.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
               {offers?.map((offer) => (
                 <Card
