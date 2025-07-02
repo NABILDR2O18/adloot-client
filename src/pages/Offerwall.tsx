@@ -338,6 +338,7 @@ export default function Offerwall() {
         offerId,
         country: location?.country,
         isLootably: isLootably === true,
+        ip: location?.ip,
       }); // your endpoint here
     } catch (error) {
       console.error("Unable to start offer", error);
