@@ -46,10 +46,14 @@ export default function ProfileSettings() {
     }
   };
 
-  const handleUpdatePassword = async () => {
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
     setLoading(true);
     try {
-      const response = await api.put(`/${user?.role}/user/password`, passwords);
+      const response = await api.put(
+        `/${user?.role}/account/password`,
+        passwords
+      );
       if (response.status === 200) {
         toast.success(`Password updated successfully.`);
         setPasswords({
@@ -199,7 +203,7 @@ export default function ProfileSettings() {
         <TabsContent value="password">
           <Card>
             <CardContent className="pt-6">
-              <form className="space-y-4">
+              <form onSubmit={handleUpdatePassword} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="currentPassword">Current Password</Label>
                   <Input
@@ -250,11 +254,7 @@ export default function ProfileSettings() {
                     minLength={6}
                   />
                 </div>
-                <Button
-                  onClick={handleUpdatePassword}
-                  type="submit"
-                  disabled={isLoading}
-                >
+                <Button type="submit" disabled={isLoading}>
                   {isLoading ? "Updating Password..." : "Update Password"}
                 </Button>
               </form>

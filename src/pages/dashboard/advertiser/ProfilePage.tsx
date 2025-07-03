@@ -12,9 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Shield, Lock, CreditCard, Bell, User } from "lucide-react";
+import { Bell, User } from "lucide-react";
 import toast from "react-hot-toast";
 import { useUser } from "@/contexts/UserContext";
 import api from "@/lib/axios";
@@ -23,6 +22,11 @@ export default function ProfilePage() {
   const { user, setUser } = useUser();
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  const [passwords, setPasswords] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
   const [formData, setFormData] = useState({
     name: user?.full_name || "",
     email: user.email || "",
@@ -57,6 +61,31 @@ export default function ProfilePage() {
     }
   };
 
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await api.put(
+        `/${user?.role}/account/password`,
+        passwords
+      );
+      if (response.status === 200) {
+        toast.success(`Password updated successfully.`);
+        setPasswords({
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error("Error updating password:", error);
+      toast.error("Failed to update password");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
@@ -85,7 +114,7 @@ export default function ProfilePage() {
       <Tabs defaultValue="account" className="space-y-6">
         <TabsList>
           <TabsTrigger value="account">Account</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
+          <TabsTrigger value="password">Password</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
         </TabsList>
 
@@ -178,62 +207,70 @@ export default function ProfilePage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="security">
+        <TabsContent value="password">
           <Card>
             <CardHeader>
-              <CardTitle>Security Settings</CardTitle>
+              <CardTitle>Change password</CardTitle>
               <CardDescription>
-                Manage your account security and authentication options
+                Manage your account password and authentication options
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Lock className="h-6 w-6" />
-                    <div>
-                      <p className="font-medium">Password</p>
-                      <p className="text-sm text-muted-foreground">
-                        Last updated 3 months ago
-                      </p>
-                    </div>
-                  </div>
-                  <Button variant="outline" size="sm">
-                    Change Password
-                  </Button>
+              <form onSubmit={handleUpdatePassword} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="currentPassword">Current Password</Label>
+                  <Input
+                    id="currentPassword"
+                    type="password"
+                    value={passwords.currentPassword}
+                    onChange={(e) =>
+                      setPasswords({
+                        ...passwords,
+                        currentPassword: e.target.value,
+                      })
+                    }
+                    disabled={isLoading}
+                    required
+                  />
                 </div>
-
-                <Separator />
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Shield className="h-6 w-6" />
-                    <div>
-                      <p className="font-medium">Two-Factor Authentication</p>
-                      <p className="text-sm text-muted-foreground">
-                        Add an extra layer of security
-                      </p>
-                    </div>
-                  </div>
-                  <Button variant="outline" size="sm">
-                    Enable
-                  </Button>
+                <div className="space-y-2">
+                  <Label htmlFor="newPassword">New Password</Label>
+                  <Input
+                    id="newPassword"
+                    type="password"
+                    value={passwords.newPassword}
+                    onChange={(e) =>
+                      setPasswords({
+                        ...passwords,
+                        newPassword: e.target.value,
+                      })
+                    }
+                    disabled={isLoading}
+                    required
+                    minLength={6}
+                  />
                 </div>
-
-                <Separator />
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Active Sessions</p>
-                    <p className="text-sm text-muted-foreground">
-                      Manage your active sessions
-                    </p>
-                  </div>
-                  <Button variant="outline" size="sm">
-                    View All
-                  </Button>
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    value={passwords.confirmPassword}
+                    onChange={(e) =>
+                      setPasswords({
+                        ...passwords,
+                        confirmPassword: e.target.value,
+                      })
+                    }
+                    disabled={isLoading}
+                    required
+                    minLength={6}
+                  />
                 </div>
-              </div>
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? "Updating Password..." : "Update Password"}
+                </Button>
+              </form>
             </CardContent>
           </Card>
         </TabsContent>
