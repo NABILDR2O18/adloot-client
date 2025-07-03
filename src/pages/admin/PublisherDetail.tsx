@@ -223,7 +223,7 @@ export default function PublisherDetail() {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="apps">
-              <AppsManagement />
+              <AppsManagement pubId={id} />
             </TabsContent>
             <TabsContent value="billing">
               <Card>

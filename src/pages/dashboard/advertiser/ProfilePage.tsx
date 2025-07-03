@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Bell, User } from "lucide-react";
+import { User } from "lucide-react";
 import toast from "react-hot-toast";
 import { useUser } from "@/contexts/UserContext";
 import api from "@/lib/axios";
@@ -115,7 +115,6 @@ export default function ProfilePage() {
         <TabsList>
           <TabsTrigger value="account">Account</TabsTrigger>
           <TabsTrigger value="password">Password</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
         </TabsList>
 
         <TabsContent value="account">
@@ -272,95 +271,6 @@ export default function ProfilePage() {
                 </Button>
               </form>
             </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="notifications">
-          <Card>
-            <CardHeader>
-              <CardTitle>Notification Preferences</CardTitle>
-              <CardDescription>
-                Configure how and when you want to be notified
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Bell className="h-6 w-6" />
-                    <div>
-                      <p className="font-medium">Email Notifications</p>
-                      <p className="text-sm text-muted-foreground">
-                        Receive updates about your campaigns
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center h-4">
-                    <input
-                      type="checkbox"
-                      defaultChecked
-                      className="h-4 w-4 rounded border-gray-300"
-                    />
-                  </div>
-                </div>
-
-                <Separator />
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Performance Reports</p>
-                    <p className="text-sm text-muted-foreground">
-                      Weekly performance summary
-                    </p>
-                  </div>
-                  <div className="flex items-center h-4">
-                    <input
-                      type="checkbox"
-                      defaultChecked
-                      className="h-4 w-4 rounded border-gray-300"
-                    />
-                  </div>
-                </div>
-
-                <Separator />
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Budget Alerts</p>
-                    <p className="text-sm text-muted-foreground">
-                      Get notified when budget is 80% spent
-                    </p>
-                  </div>
-                  <div className="flex items-center h-4">
-                    <input
-                      type="checkbox"
-                      defaultChecked
-                      className="h-4 w-4 rounded border-gray-300"
-                    />
-                  </div>
-                </div>
-
-                <Separator />
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Marketing Updates</p>
-                    <p className="text-sm text-muted-foreground">
-                      News and promotional offers
-                    </p>
-                  </div>
-                  <div className="flex items-center h-4">
-                    <input
-                      type="checkbox"
-                      className="h-4 w-4 rounded border-gray-300"
-                    />
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter className="flex justify-end">
-              <Button>Save preferences</Button>
-            </CardFooter>
           </Card>
         </TabsContent>
       </Tabs>

@@ -93,7 +93,7 @@ export interface IAppData {
   user: AppUser;
 }
 
-export default function AppsManagement() {
+export default function AppsManagement({ pubId }: { pubId?: string }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -119,6 +119,7 @@ export default function AppsManagement() {
         limit: pageSize,
         platform,
         search,
+        pubId,
       };
       const response = await api.get("/admin/apps", { params });
       setApps(response?.data?.data?.apps);

@@ -12,41 +12,90 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Shield, Lock, User as UserIcon } from "lucide-react";
-import { toast } from "react-hot-toast";
+import { UserIcon } from "lucide-react";
+import toast from "react-hot-toast";
 import { useUser } from "@/contexts/UserContext";
+import api from "@/lib/axios";
+import { Badge } from "@/components/ui/badge";
 
-export default function AdminProfile() {
-  const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isProfileLoading, setIsProfileLoading] = useState(false);
+export default function ProfilePage() {
   const { user, setUser } = useUser();
-
-  const [formData, setFormData] = useState({
-    firstName: "Admin",
-    lastName: "User",
-    email: "",
-    phone: "+1 234 567 8900",
-  });
-
+  const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const [passwords, setPasswords] = useState({
-    current: "",
-    new: "",
-    confirm: "",
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
+  const [formData, setFormData] = useState({
+    name: user?.full_name || "",
+    email: user.email || "",
+    companyName: user?.company_name || "",
+    website: user?.website_or_app || "",
+    phoneNumber: user.phone || "",
+    bio: user?.bio || "",
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleAccountUpdate = async () => {
+    setLoading(true);
+    try {
+      const response = await api.put(`/${user?.role}/account/update`, formData);
+      if (response.status === 200) {
+        toast.success(`User details updated successfully.`);
+        setUser(response?.data?.data?.user || user);
+        setIsEditing(false);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error("Error updating user details:", error);
+      toast.error("Failed to update user details");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await api.put(
+        `/${user?.role}/account/password`,
+        passwords
+      );
+      if (response.status === 200) {
+        toast.success(`Password updated successfully.`);
+        setPasswords({
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error("Error updating password:", error);
+      toast.error("Failed to update password");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto">
       <div className="mb-8">
         <div className="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
           <div className="flex items-center gap-4">
             <Avatar className="h-24 w-24 border-2 border-border">
               <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg`} />
               <AvatarFallback className="text-2xl">
-                {formData.firstName[0]}
-                {formData.lastName[0]}
+                {user?.full_name?.charAt(0).toUpperCase() || "A"}
               </AvatarFallback>
             </Avatar>
             <div>
@@ -64,10 +113,7 @@ export default function AdminProfile() {
               </div>
             </div>
           </div>
-          <Button
-            onClick={() => setIsEditing(!isEditing)}
-            disabled={isProfileLoading}
-          >
+          <Button onClick={() => setIsEditing(!isEditing)} disabled={isLoading}>
             {isEditing ? "Cancel" : "Edit Profile"}
           </Button>
         </div>
@@ -76,39 +122,28 @@ export default function AdminProfile() {
       <Tabs defaultValue="account" className="space-y-6">
         <TabsList>
           <TabsTrigger value="account">Account</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
+          <TabsTrigger value="password">Password</TabsTrigger>
         </TabsList>
 
         <TabsContent value="account">
           <Card>
             <CardHeader>
               <CardTitle>Account Information</CardTitle>
-              <CardDescription>Update your account details</CardDescription>
+              <CardDescription>
+                Update your account details and public profile
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">First name</Label>
-                  <Input
-                    id="firstName"
-                    value={formData.firstName}
-                    onChange={(e) =>
-                      setFormData({ ...formData, firstName: e.target.value })
-                    }
-                    disabled={!isEditing || isProfileLoading}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Last name</Label>
-                  <Input
-                    id="lastName"
-                    value={formData.lastName}
-                    onChange={(e) =>
-                      setFormData({ ...formData, lastName: e.target.value })
-                    }
-                    disabled={!isEditing || isProfileLoading}
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="firstName">First name</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  value={formData?.name}
+                  disabled={!isEditing}
+                  onChange={handleInputChange}
+                  placeholder="Enter fullname"
+                />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -116,103 +151,133 @@ export default function AdminProfile() {
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
+                    name="email"
                     type="email"
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
-                    disabled={true}
+                    value={formData?.email}
+                    disabled
+                    placeholder="Enter email address"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone number</Label>
+                  <Label htmlFor="phoneNumber">Phone number</Label>
                   <Input
-                    id="phone"
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    value={formData?.phoneNumber}
+                    disabled={!isEditing}
                     type="tel"
-                    value={formData.phone}
-                    onChange={(e) =>
-                      setFormData({ ...formData, phone: e.target.value })
-                    }
-                    disabled={!isEditing || isProfileLoading}
+                    onChange={handleInputChange}
+                    placeholder="Phone number"
                   />
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="companyName">Company name</Label>
+                <Input
+                  id="companyName"
+                  name="companyName"
+                  value={formData?.companyName}
+                  disabled={!isEditing}
+                  onChange={handleInputChange}
+                  placeholder="Enter company name"
+                />
+              </div>
+
+              <Separator />
+
+              <div className="space-y-2">
+                <Label htmlFor="bio">Bio</Label>
+                <textarea
+                  id="bio"
+                  name="bio"
+                  value={formData?.bio}
+                  className="w-full min-h-[120px] p-2 rounded-md border border-border bg-background text-foreground disabled:opacity-70 resize-y"
+                  disabled={!isEditing}
+                  placeholder="Tell us about yourself"
+                  onChange={(e) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      bio: e.target.value,
+                    }));
+                  }}
+                />
               </div>
             </CardContent>
             <CardFooter className="flex justify-end">
               {isEditing && (
-                <Button disabled={isProfileLoading}>
-                  {isProfileLoading ? "Saving Changes..." : "Save Changes"}
+                <Button disabled={isLoading} onClick={handleAccountUpdate}>
+                  {isLoading ? "Saving" : "Save changes"}
                 </Button>
               )}
             </CardFooter>
           </Card>
         </TabsContent>
 
-        <TabsContent value="security">
+        <TabsContent value="password">
           <Card>
             <CardHeader>
-              <CardTitle>Security Settings</CardTitle>
+              <CardTitle>Change password</CardTitle>
               <CardDescription>
-                Manage your account security and password
+                Manage your account password and authentication options
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <form className="space-y-4">
-                <div className="flex items-center gap-3 mb-4">
-                  <Lock className="h-6 w-6 text-purple-500" />
-                  <div>
-                    <p className="font-medium">Change Password</p>
-                    <p className="text-sm text-muted-foreground">
-                      Update your password to maintain security
-                    </p>
-                  </div>
-                </div>
-
+              <form onSubmit={handleUpdatePassword} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="currentPassword">Current Password</Label>
                   <Input
                     id="currentPassword"
                     type="password"
-                    value={passwords.current}
+                    value={passwords.currentPassword}
                     onChange={(e) =>
-                      setPasswords({ ...passwords, current: e.target.value })
+                      setPasswords({
+                        ...passwords,
+                        currentPassword: e.target.value,
+                      })
                     }
+                    disabled={isLoading}
                     required
                   />
                 </div>
-
                 <div className="space-y-2">
                   <Label htmlFor="newPassword">New Password</Label>
                   <Input
                     id="newPassword"
                     type="password"
-                    value={passwords.new}
+                    value={passwords.newPassword}
                     onChange={(e) =>
-                      setPasswords({ ...passwords, new: e.target.value })
+                      setPasswords({
+                        ...passwords,
+                        newPassword: e.target.value,
+                      })
                     }
+                    disabled={isLoading}
                     required
+                    minLength={6}
                   />
                 </div>
-
                 <div className="space-y-2">
                   <Label htmlFor="confirmPassword">Confirm New Password</Label>
                   <Input
                     id="confirmPassword"
                     type="password"
-                    value={passwords.confirm}
+                    value={passwords.confirmPassword}
                     onChange={(e) =>
-                      setPasswords({ ...passwords, confirm: e.target.value })
+                      setPasswords({
+                        ...passwords,
+                        confirmPassword: e.target.value,
+                      })
                     }
+                    disabled={isLoading}
                     required
+                    minLength={6}
                   />
                 </div>
-
-                <Button type="submit" className="mt-4" disabled={isLoading}>
+                <Button type="submit" disabled={isLoading}>
                   {isLoading ? "Updating Password..." : "Update Password"}
                 </Button>
               </form>
-
-              <Separator className="my-6" />
             </CardContent>
           </Card>
         </TabsContent>
