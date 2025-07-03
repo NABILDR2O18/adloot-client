@@ -30,16 +30,13 @@ import AdminProfile from "@/pages/admin/AdminProfile";
 import PublisherLayout from "@/layouts/PublisherLayout";
 import PublisherDashboard from "@/pages/dashboard/PublisherDashboard";
 import ProfileSettings from "./pages/dashboard/ProfileSettings";
-import PaymentPage from "./pages/dashboard/PaymentPage";
 import TicketSupport from "./pages/dashboard/TicketSupport";
 import TicketDetailPage from "./pages/dashboard/TicketDetailPage";
 import WithdrawalDetails from "./pages/dashboard/WithdrawalDetails";
 import MyAppsPage from "./pages/dashboard/MyAppsPage";
 import AllOffersPage from "@/pages/dashboard/AllOffersPage";
 import AppSettings from "./pages/dashboard/AppSettings";
-import PostbackTester from "@/pages/dashboard/PostbackTester";
 import ReportsPage from "@/pages/dashboard/ReportsPage";
-import OffersListPage from "@/pages/dashboard/OffersListPage";
 import PublisherWithdrawalPage from "@/pages/dashboard/PublisherWithdrawalPage";
 import PublisherBillingPage from "@/pages/dashboard/PublisherBillingPage";
 
@@ -47,7 +44,6 @@ import PublisherBillingPage from "@/pages/dashboard/PublisherBillingPage";
 import AdvertiserLayout from "@/layouts/AdvertiserLayout";
 import AdvertiserDashboard from "@/pages/dashboard/advertiser/AdvertiserDashboard";
 import CampaignsPage from "@/pages/dashboard/advertiser/CampaignsPage";
-import BillingPage from "@/pages/dashboard/advertiser/BillingPage";
 import GlobalPostbackPage from "@/pages/dashboard/advertiser/GlobalPostbackPage";
 import CreateCampaignPage from "@/pages/dashboard/advertiser/CreateCampaignPage";
 import PerformancePage from "@/pages/dashboard/advertiser/PerformancePage";
@@ -198,10 +194,8 @@ const AppRoutes = () => {
           <Route path="support/:id" element={<TicketDetailPage />} />
           <Route path="my-apps" element={<MyAppsPage />} />
           <Route path="available-offers" element={<AllOffersPage />} />
-          <Route path="all-offers" element={<OffersListPage />} />
           <Route path="new-app" element={<AppSettings />} />
           <Route path="app/:id" element={<AppSettings />} />
-          <Route path="postback-tester" element={<PostbackTester />} />
           <Route path="reports" element={<ReportsPage />} />
           <Route path="payment" element={<PublisherWithdrawalPage />} />
           <Route path="billing" element={<PublisherBillingPage />} />
@@ -221,10 +215,8 @@ const AppRoutes = () => {
           <Route path="withdrawal/:id" element={<WithdrawalDetails />} />
           <Route path="my-apps" element={<MyAppsPage />} />
           <Route path="available-offers" element={<AllOffersPage />} />
-          <Route path="all-offers" element={<OffersListPage />} />
           <Route path="new-app" element={<AppSettings />} />
           <Route path="app/:id" element={<AppSettings />} />
-          <Route path="postback-tester" element={<PostbackTester />} />
           <Route path="reports" element={<ReportsPage />} />
           <Route path="payment" element={<PublisherWithdrawalPage />} />
           <Route path="billing" element={<PublisherBillingPage />} />

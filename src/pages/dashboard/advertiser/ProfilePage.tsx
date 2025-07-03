@@ -67,12 +67,12 @@ export default function ProfilePage() {
               <AvatarFallback className="text-2xl">JD</AvatarFallback>
             </Avatar>
             <div>
-              <h1 className="text-2xl font-bold mb-1">John Doe</h1>
+              <h1 className="text-2xl font-bold mb-1">
+                {user?.full_name ?? user?.company_name}
+              </h1>
               <div className="flex flex-wrap items-center gap-2 text-muted-foreground">
                 <User size={16} />
                 <span>Advertiser</span>
-                <span className="text-muted-foreground">•</span>
-                <Badge variant="outline">Premium</Badge>
               </div>
             </div>
           </div>
@@ -85,7 +85,6 @@ export default function ProfilePage() {
       <Tabs defaultValue="account" className="space-y-6">
         <TabsList>
           <TabsTrigger value="account">Account</TabsTrigger>
-          <TabsTrigger value="billing">Billing</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
         </TabsList>
@@ -176,83 +175,6 @@ export default function ProfilePage() {
                 </Button>
               )}
             </CardFooter>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="billing">
-          <Card>
-            <CardHeader>
-              <CardTitle>Billing Information</CardTitle>
-              <CardDescription>
-                Manage your billing details and payment methods
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <CreditCard className="h-6 w-6" />
-                    <div>
-                      <p className="font-medium">Premium Plan</p>
-                      <p className="text-sm text-muted-foreground">
-                        $199/month
-                      </p>
-                    </div>
-                  </div>
-                  <Badge variant="outline">Active</Badge>
-                </div>
-
-                <Separator />
-
-                <h3 className="font-semibold">Payment Methods</h3>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 border rounded-md">
-                    <div className="flex items-center gap-3">
-                      <div className="bg-blue-100 p-2 rounded-md">
-                        <svg
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          className="text-blue-600"
-                        >
-                          <rect
-                            x="2"
-                            y="5"
-                            width="20"
-                            height="14"
-                            rx="2"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                          />
-                          <path
-                            d="M2 10H22"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                          />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="font-medium">Visa ending in 4242</p>
-                        <p className="text-sm text-muted-foreground">
-                          Expires 04/2025
-                        </p>
-                      </div>
-                    </div>
-                    <Badge>Default</Badge>
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm">
-                    Add Payment Method
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    Manage Subscription
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
           </Card>
         </TabsContent>
 

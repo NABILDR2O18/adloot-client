@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DatePickerWithRange } from "@/components/dashboard/DateRangePicker";
@@ -19,19 +18,14 @@ import {
   Pie,
   Cell,
 } from "recharts";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
-import { 
-  Tabs, 
-  TabsContent, 
-  TabsList, 
-  TabsTrigger 
-} from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const COLORS = ["#9b87f5", "#33C3F0", "#1EAEDB", "#8E9196", "#1A1F2C"];
 
@@ -77,22 +71,21 @@ export default function ReportsPage() {
     from: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
     to: new Date(),
   });
-  
+
   const [reportType, setReportType] = useState("earnings");
-  
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <h1 className="text-3xl font-bold text-gray-800 mb-1">Reports</h1>
-          <p className="text-gray-500">Analyze your performance data and insights</p>
+          <p className="text-gray-500">
+            Analyze your performance data and insights
+          </p>
         </div>
         <div className="flex flex-wrap gap-4">
           <DatePickerWithRange date={date} setDate={setDate} />
-          <Select 
-            value={reportType} 
-            onValueChange={setReportType}
-          >
+          <Select value={reportType} onValueChange={setReportType}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Report Type" />
             </SelectTrigger>
@@ -104,7 +97,7 @@ export default function ReportsPage() {
           </Select>
         </div>
       </div>
-      
+
       <Tabs defaultValue="overview" className="w-full">
         <TabsList className="mb-6">
           <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -112,35 +105,35 @@ export default function ReportsPage() {
           <TabsTrigger value="conversions">Conversions</TabsTrigger>
           <TabsTrigger value="geography">Geography</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="overview">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <StatsCard 
-              title="Total Earnings" 
-              value="$42,589.20" 
-              change="+12.5%" 
+            <StatsCard
+              title="Total Earnings"
+              value="$42,589.20"
+              change="+12.5%"
               isPositive={true}
             />
-            <StatsCard 
-              title="Conversion Rate" 
-              value="32.8%" 
-              change="+5.3%" 
+            <StatsCard
+              title="Conversion Rate"
+              value="32.8%"
+              change="+5.3%"
               isPositive={true}
             />
-            <StatsCard 
-              title="Click-through Rate" 
-              value="24.2%" 
-              change="-1.8%" 
+            <StatsCard
+              title="Click-through Rate"
+              value="24.2%"
+              change="-1.8%"
               isPositive={false}
             />
-            <StatsCard 
-              title="Total Offers" 
-              value="412" 
-              change="+8.0%" 
+            <StatsCard
+              title="Total Offers"
+              value="412"
+              change="+8.0%"
               isPositive={true}
             />
           </div>
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -172,7 +165,7 @@ export default function ReportsPage() {
                 </ResponsiveContainer>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardHeader>
                 <CardTitle>Offer Categories</CardTitle>
@@ -185,13 +178,18 @@ export default function ReportsPage() {
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      label={({ name, percent }) =>
+                        `${name}: ${(percent * 100).toFixed(0)}%`
+                      }
                       outerRadius={80}
                       fill="#8884d8"
                       dataKey="value"
                     >
                       {categoryData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
                       ))}
                     </Pie>
                     <Tooltip />
@@ -201,7 +199,7 @@ export default function ReportsPage() {
               </CardContent>
             </Card>
           </div>
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
             <Card>
               <CardHeader>
@@ -215,13 +213,18 @@ export default function ReportsPage() {
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      label={({ name, percent }) =>
+                        `${name}: ${(percent * 100).toFixed(0)}%`
+                      }
                       outerRadius={80}
                       fill="#8884d8"
                       dataKey="value"
                     >
                       {countryData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
                       ))}
                     </Pie>
                     <Tooltip />
@@ -230,7 +233,7 @@ export default function ReportsPage() {
                 </ResponsiveContainer>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardHeader>
                 <CardTitle>Device Distribution</CardTitle>
@@ -243,13 +246,18 @@ export default function ReportsPage() {
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      label={({ name, percent }) =>
+                        `${name}: ${(percent * 100).toFixed(0)}%`
+                      }
                       outerRadius={80}
                       fill="#8884d8"
                       dataKey="value"
                     >
                       {deviceData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
                       ))}
                     </Pie>
                     <Tooltip />
@@ -260,7 +268,7 @@ export default function ReportsPage() {
             </Card>
           </div>
         </TabsContent>
-        
+
         <TabsContent value="earnings">
           <Card>
             <CardHeader>
@@ -288,7 +296,7 @@ export default function ReportsPage() {
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         <TabsContent value="conversions">
           <Card>
             <CardHeader>
@@ -316,7 +324,7 @@ export default function ReportsPage() {
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         <TabsContent value="geography">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
@@ -345,7 +353,7 @@ export default function ReportsPage() {
                 </ResponsiveContainer>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardHeader>
                 <CardTitle>Device Distribution</CardTitle>
@@ -358,13 +366,18 @@ export default function ReportsPage() {
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      label={({ name, percent }) =>
+                        `${name}: ${(percent * 100).toFixed(0)}%`
+                      }
                       outerRadius={110}
                       fill="#8884d8"
                       dataKey="value"
                     >
                       {deviceData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
                       ))}
                     </Pie>
                     <Tooltip />
@@ -395,7 +408,11 @@ function StatsCard({ title, value, change, isPositive }: StatsCardProps) {
           <p className="text-sm font-medium text-gray-500">{title}</p>
           <div className="flex items-baseline justify-between">
             <h3 className="text-2xl font-bold">{value}</h3>
-            <span className={`text-sm font-medium ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+            <span
+              className={`text-sm font-medium ${
+                isPositive ? "text-green-600" : "text-red-600"
+              }`}
+            >
               {change}
             </span>
           </div>

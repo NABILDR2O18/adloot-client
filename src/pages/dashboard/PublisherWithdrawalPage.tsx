@@ -13,7 +13,7 @@ import {
 import { ChevronLeft, CreditCard } from "lucide-react";
 import api from "@/lib/axios";
 import toast from "react-hot-toast";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useUser } from "@/contexts/UserContext";
 import { Separator } from "@/components/ui/separator";
 
