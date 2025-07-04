@@ -47,21 +47,12 @@ const testimonials = [
   },
 ];
 
-const partnerLogos = [
-  { name: "Partner 1", url: "#" },
-  { name: "Partner 2", url: "#" },
-  { name: "Partner 3", url: "#" },
-  { name: "Partner 4", url: "#" },
-  { name: "Partner 5", url: "#" },
-  { name: "Partner 6", url: "#" },
-];
-
 const TestimonialCard = ({ testimonial }) => (
   <Card className="p-6 min-h-[250px] shadow-lg">
     <div className="flex items-center mb-4">
       <img
         src={testimonial.avatar}
-        alt={testimonial.name}
+        alt={`Review and thoughts about AdLoot.io by ${testimonial.name}`}
         className="w-12 h-12 rounded-full mr-4 object-cover"
       />
       <div>
