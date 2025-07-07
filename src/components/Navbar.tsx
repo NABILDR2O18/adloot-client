@@ -4,8 +4,10 @@ import { Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   NavigationMenu,
+  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuList,
+  NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { useAuthModal } from "@/contexts/AuthModalContext";
 import AuthWrapper from "./auth/AuthWrapper";
@@ -31,12 +33,48 @@ const Navbar = () => {
               <NavigationMenu>
                 <NavigationMenuList>
                   <NavigationMenuItem>
-                    <Link
-                      to="/"
-                      className="text-gray-700 hover:text-purple-600 transition-colors px-3 py-2"
-                    >
-                      Home
-                    </Link>
+                    <NavigationMenuTrigger className="text-gray-700 hover:text-purple-600 transition-colors bg-white dark:bg-transparent dark:hover:bg-transparent">
+                      Solutions
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <div className="grid grid-cols-2 gap-4 p-6 w-[400px] bg-white">
+                        {[
+                          {
+                            name: "Offerwall",
+                            desc: "Increase user engagement",
+                            path: "/solutions/offerwall",
+                          },
+                          {
+                            name: "SDK",
+                            desc: "Easy app integration",
+                            path: "/solutions/sdk",
+                          },
+                          {
+                            name: "API",
+                            desc: "Powerful customization",
+                            path: "/solutions/api",
+                          },
+                          {
+                            name: "Smart Targeting",
+                            desc: "Precision marketing",
+                            path: "/solutions/targeting",
+                          },
+                        ].map((item) => (
+                          <Link
+                            key={item.name}
+                            to={item.path}
+                            className="p-3 hover:bg-gray-50 rounded-lg transition-colors"
+                          >
+                            <div className="font-medium text-gray-900">
+                              {item.name}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {item.desc}
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </NavigationMenuContent>
                   </NavigationMenuItem>
                   <NavigationMenuItem>
                     <Link

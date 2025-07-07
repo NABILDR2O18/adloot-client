@@ -135,10 +135,7 @@ const ForgetPassword = () => {
       setOtp("");
       setNewPassword("");
       setConfirm("");
-      setTimeout(() => {
-        setMsg(null);
-        openLogin();
-      }, 2000);
+      navigate("/");
     } catch (err: any) {
       setError(err?.response?.data?.message || "Failed to reset password.");
     } finally {
@@ -157,12 +154,17 @@ const ForgetPassword = () => {
 
   return (
     <section className="h-screen grid grid-cols-1 md:grid-cols-2 overflow-hidden">
-      <div className="flex items-center justify-center bg-muted">
+      <img
+        className="h-full w-full object-cover pointer-events-none md:block hidden"
+        src="/forget-password.png"
+        alt="AdLoot - The next-gen ad network connecting advertisers with high-converting global traffic"
+      />
+      <div className="flex items-center justify-center bg-muted p-4">
         <div className="max-w-md w-full mx-auto">
           <Button
             variant="outline"
             className="flex items-center gap-1"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/")}
           >
             <ChevronLeft className="w-4 h-4" />
             <span>Back</span>
@@ -293,11 +295,6 @@ const ForgetPassword = () => {
           </Card>
         </div>
       </div>
-      <img
-        className="h-full w-full object-cover pointer-events-none"
-        src="/forget-password.png"
-        alt="AdLoot - The next-gen ad network connecting advertisers with high-converting global traffic"
-      />
     </section>
   );
 };
