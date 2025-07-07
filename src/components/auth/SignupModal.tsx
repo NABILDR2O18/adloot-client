@@ -29,7 +29,7 @@ export default function SignupModal() {
     website: "",
     phoneNumber: "",
   });
-  const [acceptTerms, setAcceptTerms] = useState(false);
+  const [acceptTerms, setAcceptTerms] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 

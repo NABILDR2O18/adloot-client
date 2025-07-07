@@ -1,13 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { Menu, X, ChevronDown, Shield } from "lucide-react";
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuList,
-  NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { useAuthModal } from "@/contexts/AuthModalContext";
 import AuthWrapper from "./auth/AuthWrapper";
@@ -16,15 +14,8 @@ import { useUser } from "@/contexts/UserContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { openLogin, openSignup, setUserType } = useAuthModal();
-  const { user, setUser, logout } = useUser();
-
-  useEffect(() => {
-    console.log("developmentInfo", {
-      mode: import.meta.env.MODE,
-      VITE_SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL,
-    });
-  }, []);
+  const { openLogin, openSignup } = useAuthModal();
+  const { user, logout } = useUser();
 
   return (
     <>
@@ -40,82 +31,45 @@ const Navbar = () => {
               <NavigationMenu>
                 <NavigationMenuList>
                   <NavigationMenuItem>
-                    <NavigationMenuTrigger className="text-gray-700 hover:text-purple-600 transition-colors bg-white dark:bg-transparent dark:hover:bg-transparent">
-                      Solutions
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <div className="grid grid-cols-2 gap-4 p-6 w-[400px] bg-white">
-                        {[
-                          {
-                            name: "Offerwall",
-                            desc: "Increase user engagement",
-                            path: "/solutions/offerwall",
-                          },
-                          {
-                            name: "SDK",
-                            desc: "Easy app integration",
-                            path: "/solutions/sdk",
-                          },
-                          {
-                            name: "API",
-                            desc: "Powerful customization",
-                            path: "/solutions/api",
-                          },
-                          {
-                            name: "Smart Targeting",
-                            desc: "Precision marketing",
-                            path: "/solutions/targeting",
-                          },
-                        ].map((item) => (
-                          <Link
-                            key={item.name}
-                            to={item.path}
-                            className="p-3 hover:bg-gray-50 rounded-lg transition-colors"
-                          >
-                            <div className="font-medium text-gray-900">
-                              {item.name}
-                            </div>
-                            <div className="text-sm text-gray-500">
-                              {item.desc}
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                    </NavigationMenuContent>
+                    <Link
+                      to="/"
+                      className="text-gray-700 hover:text-purple-600 transition-colors px-3 py-2"
+                    >
+                      Home
+                    </Link>
                   </NavigationMenuItem>
-
+                  <NavigationMenuItem>
+                    <Link
+                      to="/about"
+                      className="text-gray-700 hover:text-purple-600 transition-colors px-3 py-2"
+                    >
+                      About Us
+                    </Link>
+                  </NavigationMenuItem>
                   <NavigationMenuItem>
                     <Link
                       to="/faq"
                       className="text-gray-700 hover:text-purple-600 transition-colors px-3 py-2"
                     >
-                      FAQ
-                    </Link>
-                  </NavigationMenuItem>
-
-                  <NavigationMenuItem>
-                    <Link
-                      to="/docs"
-                      className="text-gray-700 hover:text-purple-600 transition-colors px-3 py-2"
-                    >
-                      Documentation
+                      FAQ's
                     </Link>
                   </NavigationMenuItem>
 
                   {user && (
                     <NavigationMenuItem>
-                      <Link
-                        to={
-                          user?.role === "admin"
-                            ? "/admin/dashboard"
-                            : user?.role === "publisher"
-                            ? "/publisher/dashboard"
-                            : "/advertiser/dashboard"
-                        }
-                        className="text-gray-700 hover:text-purple-600 transition-colors px-3 py-2"
-                      >
-                        Dashboard
-                      </Link>
+                      <Button className="bg-purple-600 hover:bg-purple-700 text-white">
+                        <Link
+                          to={
+                            user?.role === "admin"
+                              ? "/admin/dashboard"
+                              : user?.role === "publisher"
+                              ? "/publisher/dashboard"
+                              : "/advertiser/dashboard"
+                          }
+                        >
+                          Dashboard
+                        </Link>
+                      </Button>
                     </NavigationMenuItem>
                   )}
                 </NavigationMenuList>
@@ -162,50 +116,23 @@ const Navbar = () => {
         {isOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-b">
-              <div className="block px-3 py-2">
-                <button className="flex items-center text-gray-700 hover:text-purple-600 w-full justify-between">
-                  Solutions
-                  <ChevronDown size={16} />
-                </button>
-                <div className="pl-4 mt-2 space-y-2">
-                  <Link
-                    to="/solutions/offerwall"
-                    className="block py-1 text-gray-600 hover:text-purple-600"
-                  >
-                    Offerwall
-                  </Link>
-                  <Link
-                    to="/solutions/sdk"
-                    className="block py-1 text-gray-600 hover:text-purple-600"
-                  >
-                    SDK
-                  </Link>
-                  <Link
-                    to="/solutions/api"
-                    className="block py-1 text-gray-600 hover:text-purple-600"
-                  >
-                    API
-                  </Link>
-                  <Link
-                    to="/solutions/targeting"
-                    className="block py-1 text-gray-600 hover:text-purple-600"
-                  >
-                    Smart Targeting
-                  </Link>
-                </div>
-              </div>
-
+              <Link
+                to="/"
+                className="block px-3 py-2 text-gray-700 hover:text-purple-600"
+              >
+                Home
+              </Link>
+              <Link
+                to="/about"
+                className="block px-3 py-2 text-gray-700 hover:text-purple-600"
+              >
+                About Us
+              </Link>
               <Link
                 to="/faq"
                 className="block px-3 py-2 text-gray-700 hover:text-purple-600"
               >
-                FAQ
-              </Link>
-              <Link
-                to="/docs"
-                className="block px-3 py-2 text-gray-700 hover:text-purple-600"
-              >
-                Documentation
+                FAQ's
               </Link>
               {user && (
                 <Link

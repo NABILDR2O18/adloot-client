@@ -48,22 +48,6 @@ const Footer = () => {
               high-converting global traffic.
             </p>
             <div className="flex space-x-4">
-              {/* <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <Facebook size={20} />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <Twitter size={20} />
-              </a> */}
               <a
                 href="https://www.linkedin.com/company/adlootio/"
                 target="_blank"
@@ -122,30 +106,6 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <Link
-                  to="/solutions/offerwall"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  Offerwall
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/solutions/sdk"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  SDK
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/solutions/api"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  API
-                </Link>
-              </li>
-              <li>
-                <Link
                   to="/solutions/targeting"
                   className="text-gray-400 hover:text-white transition-colors"
                 >
@@ -168,14 +128,6 @@ const Footer = () => {
               Support
             </h4>
             <ul className="space-y-2">
-              <li>
-                <Link
-                  to="/docs"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  Documentation
-                </Link>
-              </li>
               <li>
                 <Link
                   to="/help"

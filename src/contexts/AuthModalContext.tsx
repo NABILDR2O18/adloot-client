@@ -1,4 +1,3 @@
-
 import { createContext, useState, useContext, ReactNode } from "react";
 
 type UserType = "publisher" | "advertiser";
@@ -14,8 +13,11 @@ interface AuthModalContextType {
   setUserType: (type: UserType) => void;
 }
 
-const AuthModalContext = createContext<AuthModalContextType | undefined>(undefined);
+const AuthModalContext = createContext<AuthModalContextType | undefined>(
+  undefined
+);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuthModal() {
   const context = useContext(AuthModalContext);
   if (context === undefined) {
@@ -57,7 +59,7 @@ export function AuthModalProvider({ children }: { children: ReactNode }) {
         closeLogin,
         openSignup,
         closeSignup,
-        setUserType
+        setUserType,
       }}
     >
       {children}

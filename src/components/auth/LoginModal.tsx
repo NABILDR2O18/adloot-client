@@ -19,10 +19,10 @@ import { useNavigate } from "react-router-dom";
 
 export default function LoginModal() {
   const { isLoginOpen, closeLogin, openSignup } = useAuthModal();
-  const { setUser } = useUser();
+  const { setUser, user } = useUser();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -49,6 +49,7 @@ export default function LoginModal() {
         });
 
         setUser({
+          ...user,
           id: userData.id,
           email: userData.email,
           role: userData.role,
@@ -121,6 +122,9 @@ export default function LoginModal() {
                 type="button"
                 variant="link"
                 className="p-0 h-auto text-sm text-purple-600"
+                onClick={() => {
+                  navigate("/forget-password");
+                }}
               >
                 Forgot password?
               </Button>

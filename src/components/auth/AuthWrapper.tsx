@@ -1,4 +1,3 @@
-
 import { TooltipProvider } from "@/components/ui/tooltip";
 import LoginModal from "./LoginModal";
 import SignupModal from "./SignupModal";
