@@ -55,7 +55,7 @@ import {
 import toast from "react-hot-toast";
 import { useSettings } from "@/contexts/SettingsContext";
 
-export default function CampaignsManagement() {
+export default function CampaignsManagement({ adId }: { adId?: string }) {
   const { id } = useParams();
   const { settings } = useSettings();
   const navigate = useNavigate();
@@ -75,6 +75,7 @@ export default function CampaignsManagement() {
         status,
         page: currentPage,
         limit: pageSize,
+        user_id: adId,
       };
       const response = await api.get("/admin/campaigns", { params });
       setCampaigns(response?.data?.data?.campaigns);

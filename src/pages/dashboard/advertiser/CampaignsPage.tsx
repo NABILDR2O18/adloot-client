@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/select";
 import api from "@/lib/axios";
 import { pageSize } from "@/constants/limit.json";
+import { useUser } from "@/contexts/UserContext";
 
 type CampaignStatus = "active" | "rejected" | "pending" | "paused";
 type CampaignCategory = "games" | "utilities" | "entertainment" | "finance";
@@ -158,6 +159,7 @@ export const getCampaignStatusBadge = (status: string) => {
 };
 
 export default function CampaignsPage() {
+  const { user } = useUser();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const status = searchParams.get("status") || "";
@@ -232,12 +234,14 @@ export default function CampaignsPage() {
             <CircleX className="w-4 h-4" />
           </Button>
         )}
-        <Button
-          onClick={() => navigate("/advertiser/dashboard/campaigns/create")}
-          className="whitespace-nowrap"
-        >
-          <Plus className="h-4 w-4" /> Create
-        </Button>
+        {user?.available_balance > 0 && (
+          <Button
+            onClick={() => navigate("/advertiser/dashboard/campaigns/create")}
+            className="whitespace-nowrap"
+          >
+            <Plus className="h-4 w-4" /> Create
+          </Button>
+        )}
       </aside>
 
       <Card>

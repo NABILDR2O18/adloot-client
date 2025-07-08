@@ -259,7 +259,7 @@ export default function AdvertiserDetail() {
             </TabsContent>
 
             <TabsContent value="campaigns">
-              <CampaignsManagement />
+              <CampaignsManagement adId={id} />
             </TabsContent>
           </Tabs>
         </div>
