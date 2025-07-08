@@ -26,12 +26,14 @@ import {
   Ticket,
   ChevronLeft,
   Menu,
+  Bell,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useIsMobile } from "@/hooks/use-mobile";
 import Logo from "@/components/Logo";
 import { useUser } from "@/contexts/UserContext";
+import NotificationDropdown from "@/components/NotificationDropdown";
 
 export default function PublisherLayout() {
   const { logout } = useUser();
@@ -233,6 +235,7 @@ export default function PublisherLayout() {
               </h1>
             </div>
             <div className="flex items-center gap-2 md:gap-4">
+              <NotificationDropdown />
               <ThemeToggle />
               <Button
                 variant="outline"

@@ -27,12 +27,14 @@ import {
   CreditCard,
   LogOut,
   DollarSign,
+  Bell,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useIsMobile } from "@/hooks/use-mobile";
 import Logo from "@/components/Logo";
 import { useUser } from "@/contexts/UserContext";
+import NotificationDropdown from "@/components/NotificationDropdown";
 
 export default function AdvertiserLayout() {
   const { logout, user } = useUser();
@@ -269,6 +271,7 @@ export default function AdvertiserLayout() {
                 <DollarSign size={16} className="mr-1" />
                 <span>{user?.available_balance ?? 0}</span>
               </Link>
+              <NotificationDropdown />
               <ThemeToggle />
               <Button
                 variant="outline"

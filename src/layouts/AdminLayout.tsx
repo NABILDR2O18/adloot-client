@@ -38,6 +38,7 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useIsMobile } from "@/hooks/use-mobile";
 import Logo from "@/components/Logo";
 import { useUser } from "@/contexts/UserContext";
+import NotificationDropdown from "@/components/NotificationDropdown";
 
 export default function AdminLayout() {
   const location = useLocation();
@@ -375,10 +376,7 @@ export default function AdminLayout() {
               </h1>
             </div>
             <div className="flex items-center gap-2 md:gap-4">
-              <Bell
-                size={20}
-                className="text-gray-500 cursor-pointer hover:text-purple-600 transition-colors"
-              />
+              <NotificationDropdown />
               <ThemeToggle />
               <Button
                 variant="outline"
