@@ -1,6 +1,7 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useUser } from "@/contexts/UserContext";
 import LoadingSpinner from "./LoadingSpinner";
+import { Helmet } from "react-helmet-async";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -27,7 +28,18 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
     return <Navigate to="/" replace />;
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <Helmet>
+        <title>AdLoot - Next-Gen Ad Network</title>
+        <meta
+          name="description"
+          content="AdLoot - The next-gen ad network connecting advertisers with high-converting global traffic"
+        />
+      </Helmet>
+      {children}
+    </>
+  );
 };
 
 export default ProtectedRoute;

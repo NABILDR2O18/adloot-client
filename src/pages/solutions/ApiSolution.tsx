@@ -14,12 +14,38 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useAuthModal } from "@/contexts/AuthModalContext";
 import ComingSoon from "../docs/ComingSoon";
+import { Helmet } from "react-helmet-async";
 
 const ApiSolution = () => {
   const { openSignup } = useAuthModal();
 
   return (
     <div className="min-h-screen bg-white">
+      <Helmet>
+        <title>API | AdLoot - Next-Gen Ad Network</title>
+        <meta
+          name="description"
+          content="API | AdLoot - The next-gen ad network connecting advertisers with high-converting global traffic"
+        />
+        <meta name="author" content="AdLoot" />
+        <meta
+          name="keywords"
+          content="adLoot API, adloot, offerwall, ad network, monetize apps, CPA network, CPI offers, mobile advertising, performance marketing, affiliate marketing, app monetization, reward ads, user acquisition, global traffic, best offerwall for websites, pay-per-install offers, TRC20 payouts, PayPal payouts, Heaven Gamers, advertisers platform, publisher monetization"
+        />
+
+        <meta property="og:title" content="AdLoot - Next-Gen Ad Network" />
+        <meta
+          property="og:description"
+          content="The next-gen ad network connecting advertisers with high-converting global traffic"
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://adloot.io/thumbnail.jpeg" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@adloot" />
+        <meta name="twitter:image" content="https://adloot.io/thumbnail.jpeg" />
+        <link rel="canonical" href="https://adloot.io/solutions/offerwall" />
+      </Helmet>
       <Navbar />
       <ComingSoon />
       {/* <div className="pt-32 pb-16 bg-gradient-to-b from-gray-50 to-white">

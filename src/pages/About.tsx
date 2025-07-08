@@ -1,10 +1,36 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Fragment } from "react/jsx-runtime";
+import { Helmet } from "react-helmet-async";
 
 const About = () => {
   return (
     <Fragment>
+      <Helmet>
+        <title>About Us | AdLoot - Next-Gen Ad Network</title>
+        <meta
+          name="description"
+          content="About Us | AdLoot - The next-gen ad network connecting advertisers with high-converting global traffic"
+        />
+        <meta name="author" content="AdLoot" />
+        <meta
+          name="keywords"
+          content="adLoot about, adloot, offerwall, ad network, monetize apps, CPA network, CPI offers, mobile advertising, performance marketing, affiliate marketing, app monetization, reward ads, user acquisition, global traffic, best offerwall for websites, pay-per-install offers, TRC20 payouts, PayPal payouts, Heaven Gamers, advertisers platform, publisher monetization"
+        />
+
+        <meta property="og:title" content="AdLoot - Next-Gen Ad Network" />
+        <meta
+          property="og:description"
+          content="The next-gen ad network connecting advertisers with high-converting global traffic"
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://adloot.io/thumbnail.jpeg" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@adloot" />
+        <meta name="twitter:image" content="https://adloot.io/thumbnail.jpeg" />
+        <link rel="canonical" href="https://adloot.io/about" />
+      </Helmet>
       <div className="min-h-screen bg-white">
         <Navbar />
         <main className="pt-24 pb-16">

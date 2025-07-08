@@ -16,6 +16,7 @@ import { useAuthModal } from "@/contexts/AuthModalContext";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/contexts/UserContext";
 import { CallToAction } from "@/components/CallToAction";
+import { Helmet } from "react-helmet-async";
 
 const TargetingSolution = () => {
   const { openSignup } = useAuthModal();
@@ -24,8 +25,33 @@ const TargetingSolution = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
+      <Helmet>
+        <title>Smart Targeting | AdLoot - Next-Gen Ad Network</title>
+        <meta
+          name="description"
+          content="Smart Targeting | AdLoot - The next-gen ad network connecting advertisers with high-converting global traffic"
+        />
+        <meta name="author" content="AdLoot" />
+        <meta
+          name="keywords"
+          content="adLoot Smart Targeting, adloot, offerwall, ad network, monetize apps, CPA network, CPI offers, mobile advertising, performance marketing, affiliate marketing, app monetization, reward ads, user acquisition, global traffic, best offerwall for websites, pay-per-install offers, TRC20 payouts, PayPal payouts, Heaven Gamers, advertisers platform, publisher monetization"
+        />
 
+        <meta property="og:title" content="AdLoot - Next-Gen Ad Network" />
+        <meta
+          property="og:description"
+          content="The next-gen ad network connecting advertisers with high-converting global traffic"
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://adloot.io/thumbnail.jpeg" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@adloot" />
+        <meta name="twitter:image" content="https://adloot.io/thumbnail.jpeg" />
+        <link rel="canonical" href="https://adloot.io/solutions/targeting" />
+      </Helmet>
+      
+      <Navbar />
       {/* Hero Section */}
       <div className="pt-32 pb-16 bg-gradient-to-b from-purple-50 to-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
