@@ -621,7 +621,7 @@ export default function Offerwall() {
               </Button>
             )}
           </div>
-          {offers?.length > 0 ? (
+          {offers?.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
               {offers?.map((offer) => (
                 <Card
@@ -708,16 +708,6 @@ export default function Offerwall() {
                 </Card>
               ))}
             </div>
-          ) : (
-            <Card className="flex flex-col gap-2 pt-6 md:max-w-96 mx-auto mt-8 shadow-xl bg-muted/40 animate-fade-in">
-              <CardContent className="flex justify-center flex-col items-center">
-                <span className="text-gray-500 text-5xl">💬</span>
-                <p className="italic text-sm md:text-base text-center mt-4">
-                  No new offers available right now. Please check back later —
-                  we’re always updating with fresh ways to earn!
-                </p>
-              </CardContent>
-            </Card>
           )}
 
           {/* <h1 className="font-semibold mt-6">New Offers By Bitlab</h1>
@@ -783,7 +773,7 @@ export default function Offerwall() {
               </Button>
             )}
           </div> */}
-          {bitlabOffers?.length > 0 ? (
+          {bitlabOffers?.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mt-4">
               {bitlabOffers?.map((offer) => {
                 const output = getOfferPointsAndPayout(offer?.events);
@@ -879,7 +869,9 @@ export default function Offerwall() {
                 );
               })}
             </div>
-          ) : (
+          )}
+
+          {bitlabOffers?.length === 0 && offers?.length === 0 && (
             <Card className="flex flex-col gap-2 pt-6 md:max-w-96 mx-auto mt-8 shadow-xl bg-muted/40 animate-fade-in">
               <CardContent className="flex justify-center flex-col items-center">
                 <span className="text-gray-500 text-5xl">💬</span>
