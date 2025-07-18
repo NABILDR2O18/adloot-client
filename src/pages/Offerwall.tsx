@@ -241,8 +241,8 @@ export default function Offerwall() {
           sort: payout,
           ip: location?.ip,
           // is_game: isGame,
-          bitlab_categories: bitlabCategory, // CPE, iPad, iPhone, Android
-          bitlab_platforms: bitlabDevice, // smartphone, tablet
+          // bitlab_categories: bitlabCategory, // CPE, iPad, iPhone, Android
+          // bitlab_platforms: bitlabDevice, // smartphone, tablet
         }); // your endpoint here
         if (response.status === 200) {
           setOffers(response?.data?.data?.offers);
@@ -387,6 +387,50 @@ export default function Offerwall() {
   };
 
   const promo = getPromotionBonusMultiplier(app?.promotion);
+
+  // Sum up bitlab payouts and points
+  function calculatePointsAndPayout(offers: IBitlabOffer[]): {
+    points: number;
+    payout: number;
+  } {
+    let totalPoints = 0;
+    let totalPayout = 0;
+
+    offers.forEach((offer) => {
+      offer.events.forEach((event) => {
+        totalPoints += parseInt(event.points || "0", 10);
+        totalPayout += parseFloat(event.payout || "0");
+      });
+    });
+
+    return {
+      points: totalPoints,
+      payout: totalPayout,
+    };
+  }
+
+  function getOfferPointsAndPayout(
+    events: {
+      payout: string;
+      points: string;
+    }[]
+  ): {
+    points: number;
+    payout: number;
+  } {
+    let totalPoints = 0;
+    let totalPayout = 0;
+
+    events.forEach((event) => {
+      totalPoints += parseInt(event.points || "0", 10);
+      totalPayout += parseFloat(event.payout || "0");
+    });
+
+    return {
+      points: totalPoints,
+      payout: totalPayout,
+    };
+  }
 
   return (
     <section className="min-h-screen bg-gray-50">
@@ -670,9 +714,9 @@ export default function Offerwall() {
             </Card>
           )}
 
-          <h1 className="font-semibold mt-6">New Offers By Bitlab</h1>
+          {/* <h1 className="font-semibold mt-6">New Offers By Bitlab</h1>
           <div className="flex flex-col md:flex-row justify-end gap-3 mb-4 md:mb-6">
-            {/* <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2">
               <Checkbox
                 id="isGame"
                 checked={isGame}
@@ -685,7 +729,7 @@ export default function Offerwall() {
               >
                 Is Game
               </Label>
-            </div> */}
+            </div>
             <div className="w-full md:w-40">
               <Select
                 value={bitlabDevice}
@@ -732,87 +776,99 @@ export default function Offerwall() {
                 <CircleX className="w-4 h-4" />
               </Button>
             )}
-          </div>
+          </div> */}
           {bitlabOffers?.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
-              {bitlabOffers?.map((offer) => (
-                <Card
-                  key={offer?.id}
-                  className="overflow-hidden border border-gray-200 cursor-pointer hover:shadow-md transition-shadow"
-                >
-                  <CardContent className="p-3 md:p-4">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400">
-                        {offer?.icon ? (
-                          <img
-                            src={offer?.icon}
-                            alt={offer?.name}
-                            className="w-full h-full rounded-md overflow-hidden object-cover"
-                          />
-                        ) : (
-                          <ImageIcon size={20} />
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-medium text-sm md:text-base text-gray-900 capitalize min-h-[48px]">
-                          {offer?.name}
-                        </h4>
-                        <div className="flex items-center gap-1 md:gap-2 text-xs text-gray-500 flex-wrap mt-1">
-                          {offer?.device_targeting?.platforms?.map((device) => {
-                            return (
-                              <Badge
-                                variant="secondary"
-                                className="px-1.5 py-0 text-[10px] md:text-xs bg-gray-100 text-gray-700 capitalize"
-                                key={device?.name}
-                              >
-                                {device?.name === "smartphone"
-                                  ? "🤖 Android"
-                                  : `⌘ ${device?.name}`}
-                              </Badge>
-                            );
-                          })}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mt-4">
+              {bitlabOffers?.map((offer) => {
+                const output = getOfferPointsAndPayout(offer?.events);
+                const userShare =
+                  calculateCampaignDistribution(
+                    Number(output?.payout),
+                    Number(0),
+                    Number(app?.split_to_user),
+                    promo
+                  )?.userShare * Number(app?.conversion_rate);
+                return (
+                  <Card
+                    key={offer?.id}
+                    className="overflow-hidden border border-gray-200 cursor-pointer hover:shadow-md transition-shadow"
+                  >
+                    <CardContent className="p-3 md:p-4">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400">
+                          {offer?.icon ? (
+                            <img
+                              src={offer?.icon}
+                              alt={offer?.name}
+                              className="w-full h-full rounded-md overflow-hidden object-cover"
+                            />
+                          ) : (
+                            <ImageIcon size={20} />
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-medium text-sm md:text-base text-gray-900 capitalize min-h-[48px]">
+                            {offer?.name}
+                          </h4>
+                          <div className="flex items-center gap-1 md:gap-2 text-xs text-gray-500 flex-wrap mt-1">
+                            {offer?.device_targeting?.platforms?.map(
+                              (device) => {
+                                return (
+                                  <Badge
+                                    variant="secondary"
+                                    className="px-1.5 py-0 text-[10px] md:text-xs bg-gray-100 text-gray-700 capitalize"
+                                    key={device?.name}
+                                  >
+                                    {device?.name === "smartphone"
+                                      ? "🤖 Android"
+                                      : `⌘ ${device?.name}`}
+                                  </Badge>
+                                );
+                              }
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter
-                    onClick={() => {
-                      // startOfferByClick(offer?.id);
-                      // setSelectedOffer(offer);
-                      // setShowOfferPreviewModal(true);
-                    }}
-                    className="text-white p-1.5 md:p-2 flex justify-center"
-                    style={{
-                      backgroundColor: app?.design_secondary_color,
-                    }}
-                  >
-                    <div className="flex items-center gap-1">
-                      <span className="font-semibold text-sm md:text-base">
-                        +{offer?.epc}
-                      </span>
-                      <img
-                        src={app?.currency_logo}
-                        alt={app?.currency_name_plural}
-                        className="object-contain overflow-hidden w-[20px] h-[20px]"
-                      />
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M12 18V6"></path>
-                        <path d="M5 12l7-6 7 6"></path>
-                      </svg>
-                    </div>
-                  </CardFooter>
-                </Card>
-              ))}
+                    </CardContent>
+                    <CardFooter
+                      onClick={() => {
+                        // startOfferByClick(offer?.id);
+                        // setSelectedOffer(offer);
+                        // setShowOfferPreviewModal(true);
+                      }}
+                      className="text-white p-1.5 md:p-2 flex justify-center"
+                      style={{
+                        backgroundColor: app?.design_secondary_color,
+                      }}
+                    >
+                      <div className="flex items-center gap-1">
+                        <span className="font-semibold text-sm md:text-base">
+                          +{userShare?.toFixed(2)}
+                        </span>
+                        <img
+                          src={app?.currency_logo}
+                          alt={app?.currency_name_plural}
+                          className="object-contain overflow-hidden w-[20px] h-[20px]"
+                        />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M12 18V6"></path>
+                          <path d="M5 12l7-6 7 6"></path>
+                        </svg>
+                      </div>
+                    </CardFooter>
+                  </Card>
+                );
+              })}
             </div>
           ) : (
             <Card className="flex flex-col gap-2 pt-6 md:max-w-96 mx-auto mt-8 shadow-xl bg-muted/40 animate-fade-in">
