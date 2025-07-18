@@ -32,6 +32,7 @@ import { getPromotionBonusMultiplier } from "@/utils/getPromotionBonus";
 import { Helmet } from "react-helmet-async";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { BitlabOfferPreview } from "@/components/BitlabOfferPreview";
 
 export type IPInfoResponse = {
   ip: string | null;
@@ -110,7 +111,7 @@ export type ILootablyOffer = {
   appStoreDescription?: string;
 };
 
-type IBitlabOffer = {
+export type IBitlabOffer = {
   anchor: string;
   app_metadata: {
     app_id: string;
@@ -168,6 +169,30 @@ type IBitlabOffer = {
   translations: Record<string, unknown> | null;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
+export function getOfferPointsAndPayout(
+  events: {
+    payout: string;
+    points: string;
+  }[]
+): {
+  points: number;
+  payout: number;
+} {
+  let totalPoints = 0;
+  let totalPayout = 0;
+
+  events?.forEach((event) => {
+    totalPoints += parseInt(event.points || "0", 10);
+    totalPayout += parseFloat(event.payout || "0");
+  });
+
+  return {
+    points: totalPoints,
+    payout: totalPayout,
+  };
+}
+
 export default function Offerwall() {
   const [searchParams] = useSearchParams();
   const [currentTab, setCurrentTab] = useState("home");
@@ -186,7 +211,11 @@ export default function Offerwall() {
   const [app, setApp] = useState<PromotionConfig | null>(null);
   const [showOfferPreviewModal, setShowOfferPreviewModal] =
     useState<boolean>(false);
+  const [showBitlabOfferPreviewModal, setBitlabShowOfferPreviewModal] =
+    useState<boolean>(false);
   const [selectedOffer, setSelectedOffer] = useState<Campaign | null>(null);
+  const [selectedBitlabOffer, setBitlabSelectedOffer] =
+    useState<IBitlabOffer | null>(null);
   const [bitlabOffers, setBitlabOffers] = useState<IBitlabOffer[]>([]);
 
   useEffect(() => {
@@ -370,7 +399,7 @@ export default function Offerwall() {
 
   const startOfferByClick = async (
     offerId: number | string,
-    isLootably?: boolean
+    isBitlab?: boolean
   ) => {
     try {
       await api.post("/public/wall/offers/click", {
@@ -378,7 +407,7 @@ export default function Offerwall() {
         userId: sid,
         offerId,
         country: location?.country,
-        isLootably: isLootably === true,
+        isBitlab: isBitlab === true,
         ip: location?.ip,
       }); // your endpoint here
     } catch (error) {
@@ -401,29 +430,6 @@ export default function Offerwall() {
         totalPoints += parseInt(event.points || "0", 10);
         totalPayout += parseFloat(event.payout || "0");
       });
-    });
-
-    return {
-      points: totalPoints,
-      payout: totalPayout,
-    };
-  }
-
-  function getOfferPointsAndPayout(
-    events: {
-      payout: string;
-      points: string;
-    }[]
-  ): {
-    points: number;
-    payout: number;
-  } {
-    let totalPoints = 0;
-    let totalPayout = 0;
-
-    events.forEach((event) => {
-      totalPoints += parseInt(event.points || "0", 10);
-      totalPayout += parseFloat(event.payout || "0");
     });
 
     return {
@@ -832,9 +838,9 @@ export default function Offerwall() {
                     </CardContent>
                     <CardFooter
                       onClick={() => {
-                        // startOfferByClick(offer?.id);
-                        // setSelectedOffer(offer);
-                        // setShowOfferPreviewModal(true);
+                        startOfferByClick(offer?.id, true);
+                        setBitlabSelectedOffer(offer);
+                        setBitlabShowOfferPreviewModal(true);
                       }}
                       className="text-white p-1.5 md:p-2 flex justify-center"
                       style={{
@@ -843,7 +849,10 @@ export default function Offerwall() {
                     >
                       <div className="flex items-center gap-1">
                         <span className="font-semibold text-sm md:text-base">
-                          +{userShare?.toFixed(2)}
+                          +
+                          {userShare?.toFixed(
+                            Number(app?.currency_reward_rounding)
+                          )}
                         </span>
                         <img
                           src={app?.currency_logo}
@@ -1086,6 +1095,20 @@ export default function Offerwall() {
           setSelectedOffer(null);
         }}
         offer={selectedOffer}
+        app={app}
+        apiKey={placementID}
+        userId={sid}
+        location={location}
+        promo={promo}
+      />
+
+      <BitlabOfferPreview
+        isOpen={showBitlabOfferPreviewModal}
+        onClose={() => {
+          setBitlabShowOfferPreviewModal(false);
+          setBitlabSelectedOffer(null);
+        }}
+        offer={selectedBitlabOffer}
         app={app}
         apiKey={placementID}
         userId={sid}
