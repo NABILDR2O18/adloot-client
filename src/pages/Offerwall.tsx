@@ -294,6 +294,7 @@ export default function Offerwall() {
         }); // your endpoint here
         if (response.status === 200) {
           setOffers(response?.data?.data?.offers);
+          setBitlabOffers(response?.data?.data?.bitlab_offers);
         }
       } catch (error) {
         console.error("Validation failed:", error);
@@ -312,6 +313,7 @@ export default function Offerwall() {
         });
         if (response.status === 200) {
           setOffers(response?.data?.data?.offers);
+          setBitlabOffers(response?.data?.data?.bitlab_offers);
         }
       } catch (error) {
         console.error("Validation failed:", error);
@@ -890,7 +892,7 @@ export default function Offerwall() {
         >
           <h1 className="font-semibold mb-4">My Offers</h1>
 
-          {offers?.length > 0 ? (
+          {offers?.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
               {offers?.map((offer) => (
                 <Card
@@ -970,7 +972,96 @@ export default function Offerwall() {
                 </Card>
               ))}
             </div>
-          ) : (
+          )}
+          {bitlabOffers?.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mt-4">
+              {bitlabOffers?.map((offer) => {
+                const output = getOfferPointsAndPayout(offer?.events);
+                const userShare =
+                  calculateCampaignDistribution(
+                    Number(output?.payout),
+                    Number(0),
+                    Number(app?.split_to_user),
+                    promo
+                  )?.userShare * Number(app?.conversion_rate);
+                return (
+                  <Card
+                    key={offer?.id}
+                    className="overflow-hidden border border-gray-200 cursor-pointer hover:shadow-md transition-shadow"
+                  >
+                    <CardContent className="p-3 md:p-4">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400">
+                          {offer?.icon ? (
+                            <img
+                              src={offer?.icon}
+                              alt={offer?.name}
+                              className="w-full h-full rounded-md overflow-hidden object-cover"
+                            />
+                          ) : (
+                            <ImageIcon size={20} />
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-medium text-sm md:text-base text-gray-900 capitalize min-h-[48px]">
+                            {offer?.name}
+                          </h4>
+                          <div className="flex items-center gap-1 md:gap-2 text-xs text-gray-500 flex-wrap mt-1">
+                            <Badge
+                              variant="secondary"
+                              className="px-1.5 py-0 text-[10px] md:text-xs bg-gray-100 text-gray-700 capitalize"
+                            >
+                              Started
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                    <CardFooter
+                      onClick={() => {
+                        startOfferByClick(offer?.id, true);
+                        setBitlabSelectedOffer(offer);
+                        setBitlabShowOfferPreviewModal(true);
+                      }}
+                      className="text-white p-1.5 md:p-2 flex justify-center"
+                      style={{
+                        backgroundColor: app?.design_secondary_color,
+                      }}
+                    >
+                      <div className="flex items-center gap-1">
+                        <span className="font-semibold text-sm md:text-base">
+                          +
+                          {userShare?.toFixed(
+                            Number(app?.currency_reward_rounding)
+                          )}
+                        </span>
+                        <img
+                          src={app?.currency_logo}
+                          alt={app?.currency_name_plural}
+                          className="object-contain overflow-hidden w-[20px] h-[20px]"
+                        />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M12 18V6"></path>
+                          <path d="M5 12l7-6 7 6"></path>
+                        </svg>
+                      </div>
+                    </CardFooter>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
+          {bitlabOffers?.length === 0 && offers?.length === 0 && (
             <Card className="flex flex-col gap-2 pt-6 md:max-w-96 mx-auto mt-8 shadow-xl bg-muted/40 animate-fade-in">
               <CardContent className="flex justify-center flex-col items-center">
                 <span className="text-gray-500 text-5xl">💬</span>
@@ -989,13 +1080,12 @@ export default function Offerwall() {
           className="p-4 overflow-auto flex-1 min-h-[500px]"
         >
           <h1 className="font-semibold mb-4">Rewarded Offers</h1>
-
-          {offers?.length > 0 ? (
+          {offers?.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
               {offers?.map((offer) => (
                 <Card
                   key={offer?.id}
-                  className="overflow-hidden border border-gray-200 hover:shadow-md transition-shadow"
+                  className="overflow-hidden border border-gray-200 cursor-pointer hover:shadow-md transition-shadow"
                 >
                   <CardContent className="p-3 md:p-4">
                     <div className="flex items-center gap-3 mb-2">
@@ -1017,8 +1107,7 @@ export default function Offerwall() {
                         <div className="flex items-center gap-1 md:gap-2 text-xs text-gray-500 flex-wrap mt-1">
                           <Badge
                             variant="secondary"
-                            className="px-1.5 py-0 text-[10px] md:text-xs bg-green-100 text-gray-700 capitalize"
-                            key={device}
+                            className="px-1.5 py-0 text-[10px] md:text-xs bg-gray-100 text-gray-700 capitalize"
                           >
                             Completed
                           </Badge>
@@ -1027,7 +1116,11 @@ export default function Offerwall() {
                     </div>
                   </CardContent>
                   <CardFooter
-                    className="text-white p-1.5 md:p-2 flex justify-center pointer-events-none"
+                    onClick={() => {
+                      setSelectedOffer(offer);
+                      setShowOfferPreviewModal(true);
+                    }}
+                    className="text-white p-1.5 md:p-2 flex justify-center"
                     style={{
                       backgroundColor: app?.design_secondary_color,
                     }}
@@ -1066,13 +1159,104 @@ export default function Offerwall() {
                 </Card>
               ))}
             </div>
-          ) : (
+          )}
+          {bitlabOffers?.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mt-4">
+              {bitlabOffers?.map((offer) => {
+                const output = getOfferPointsAndPayout(offer?.events);
+                const userShare =
+                  calculateCampaignDistribution(
+                    Number(output?.payout),
+                    Number(0),
+                    Number(app?.split_to_user),
+                    promo
+                  )?.userShare * Number(app?.conversion_rate);
+                return (
+                  <Card
+                    key={offer?.id}
+                    className="overflow-hidden border border-gray-200 cursor-pointer hover:shadow-md transition-shadow"
+                  >
+                    <CardContent className="p-3 md:p-4">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400">
+                          {offer?.icon ? (
+                            <img
+                              src={offer?.icon}
+                              alt={offer?.name}
+                              className="w-full h-full rounded-md overflow-hidden object-cover"
+                            />
+                          ) : (
+                            <ImageIcon size={20} />
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-medium text-sm md:text-base text-gray-900 capitalize min-h-[48px]">
+                            {offer?.name}
+                          </h4>
+                          <div className="flex items-center gap-1 md:gap-2 text-xs text-gray-500 flex-wrap mt-1">
+                            <Badge
+                              variant="secondary"
+                              className="px-1.5 py-0 text-[10px] md:text-xs bg-black text-white capitalize"
+                            >
+                              Completed
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                    <CardFooter
+                      onClick={() => {
+                        startOfferByClick(offer?.id, true);
+                        setBitlabSelectedOffer(offer);
+                        setBitlabShowOfferPreviewModal(true);
+                      }}
+                      className="text-white p-1.5 md:p-2 flex justify-center"
+                      style={{
+                        backgroundColor: app?.design_secondary_color,
+                      }}
+                    >
+                      <div className="flex items-center gap-1">
+                        <span className="font-semibold text-sm md:text-base">
+                          +
+                          {userShare?.toFixed(
+                            Number(app?.currency_reward_rounding)
+                          )}
+                        </span>
+                        <img
+                          src={app?.currency_logo}
+                          alt={app?.currency_name_plural}
+                          className="object-contain overflow-hidden w-[20px] h-[20px]"
+                        />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M12 18V6"></path>
+                          <path d="M5 12l7-6 7 6"></path>
+                        </svg>
+                      </div>
+                    </CardFooter>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
+
+          {bitlabOffers?.length === 0 && offers?.length === 0 && (
             <Card className="flex flex-col gap-2 pt-6 md:max-w-96 mx-auto mt-8 shadow-xl bg-muted/40 animate-fade-in">
               <CardContent className="flex justify-center flex-col items-center">
                 <span className="text-gray-500 text-5xl">💬</span>
                 <p className="italic text-sm md:text-base text-center mt-4">
-                  No rewards have been unlocked yet. Complete offers to earn
-                  points and see your rewards here!
+                  You haven’t started any offers yet or none are currently
+                  pending. Start an offer from the homepage to see it appear
+                  here!
                 </p>
               </CardContent>
             </Card>
@@ -1106,6 +1290,7 @@ export default function Offerwall() {
         userId={sid}
         location={location}
         promo={promo}
+        ip={location?.ip}
       />
     </section>
   );

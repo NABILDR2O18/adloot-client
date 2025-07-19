@@ -12,6 +12,8 @@ const OfferWallPreviewRedirect = () => {
   const country = searchParams.get("country") || "";
   const origin = searchParams.get("origin") || "";
   const ip = searchParams.get("ip") || "";
+  const platform = searchParams.get("platform"); // Will present for Bitlab only
+  const event = searchParams.get("event"); // Will present for Bitlab only
   const [error, setError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
@@ -27,6 +29,8 @@ const OfferWallPreviewRedirect = () => {
             country,
             origin,
             ip,
+            platform,
+            bitlab_event_id: event,
           }
         );
         if (response.status === 200) {
@@ -46,7 +50,7 @@ const OfferWallPreviewRedirect = () => {
     };
 
     postTracking();
-  }, [apiKey, country, offerId, origin, userId, ip]);
+  }, [apiKey, country, offerId, origin, userId, ip, platform, event]);
 
   return (
     <div className="flex justify-center items-center h-64">

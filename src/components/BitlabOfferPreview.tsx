@@ -1,13 +1,12 @@
-import { X, AlertTriangle, ImageIcon } from "lucide-react";
+import { X, AlertTriangle, ImageIcon, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { QRCodeCanvas } from "qrcode.react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import toast from "react-hot-toast";
-import { Campaign } from "@/pages/dashboard/advertiser/CampaignsPage";
 import {
   getOfferPointsAndPayout,
   IBitlabOffer,
@@ -26,6 +25,7 @@ interface OfferPreviewModalProps {
   userId: string;
   location: IPInfoResponse;
   promo: number;
+  ip: string;
 }
 
 export function BitlabOfferPreview({
@@ -37,18 +37,14 @@ export function BitlabOfferPreview({
   userId,
   location,
   promo,
+  ip,
 }: OfferPreviewModalProps) {
   const [email, setEmail] = useState("");
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [emailError, setEmailError] = useState("");
+  const [eventIds, setEventIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-
-  const redirectUrl = `${import.meta.env.VITE_BASE_URL}/wall/${
-    offer?.id
-  }?placementId=${apiKey}&user=${userId}&country=${location?.country?.toLowerCase()}&origin=offerwall&ip=${
-    location?.ip
-  }&platform=bitlab`;
 
   const handleSendLink = async () => {
     // Simple email regex
@@ -86,6 +82,23 @@ export function BitlabOfferPreview({
     }
   };
 
+  useEffect(() => {
+    const getEvents = async () => {
+      try {
+        const response = await api.post("/public/wall/offers/events", {
+          ip,
+          offerId: offer?.id,
+        });
+        if (response.status === 200) {
+          setEventIds(response?.data?.data?.events);
+        }
+      } catch (error) {
+        console.error("Unable to fetch events", error);
+      }
+    };
+    getEvents();
+  }, [ip, offer?.id]);
+
   const output = getOfferPointsAndPayout(offer?.events);
   const userShare =
     calculateCampaignDistribution(
@@ -94,6 +107,16 @@ export function BitlabOfferPreview({
       Number(app?.split_to_user),
       promo
     )?.userShare * Number(app?.conversion_rate);
+
+  const firstNotCompletedEvent = offer?.events.find(
+    (event) => !eventIds.includes(event.id)
+  );
+
+  const redirectUrl = `${import.meta.env.VITE_BASE_URL}/wall/${
+    offer?.id
+  }?placementId=${apiKey}&user=${userId}&country=${location?.country?.toLowerCase()}&origin=offerwall&ip=${
+    location?.ip
+  }&platform=bitlab&event=${firstNotCompletedEvent?.id}`;
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -158,12 +181,19 @@ export function BitlabOfferPreview({
                 {offer?.events?.map((offerEvent, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200"
+                    className={`flex items-center justify-between p-3 rounded-lg border border-gray-200 ${
+                      eventIds?.includes(offerEvent?.id)
+                        ? "bg-gray-50"
+                        : "bg-gray-50"
+                    }`}
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-sm font-medium text-gray-700">
                         {index + 1}
                       </div>
+                      {eventIds?.includes(offerEvent?.id) && (
+                        <Check className="text-green-500" />
+                      )}
                       <span className="text-gray-700">{offerEvent.name}</span>
                     </div>
                     <div className="font-medium text-gray-900">
@@ -201,6 +231,7 @@ export function BitlabOfferPreview({
 
             <div className="pt-4 border-t border-gray-200">
               <Button
+                disabled={!firstNotCompletedEvent}
                 onClick={() => {
                   if (redirectUrl) {
                     window.open(redirectUrl, "_blank");
@@ -208,7 +239,7 @@ export function BitlabOfferPreview({
                 }}
                 className="w-full mb-2"
               >
-                Start
+                Start {`(${firstNotCompletedEvent?.name})`}
               </Button>
 
               <div className="text-sm text-gray-500">Total Reward</div>
@@ -277,6 +308,7 @@ export function BitlabOfferPreview({
                 </div>
               ) : (
                 <Button
+                  disabled={!firstNotCompletedEvent}
                   className="w-full py-6 text-lg"
                   style={{ backgroundColor: app?.design_primary_color }}
                   onClick={() => setShowEmailForm(true)}
