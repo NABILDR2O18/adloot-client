@@ -878,7 +878,7 @@ export default function Offerwall() {
               <CardContent className="flex justify-center flex-col items-center">
                 <span className="text-gray-500 text-5xl">💬</span>
                 <p className="italic text-sm md:text-base text-center mt-4">
-                  No new offers available from bitlab right now. Please check
+                  No new offers available. Please check
                   back later — we’re always updating with fresh ways to earn!
                 </p>
               </CardContent>
