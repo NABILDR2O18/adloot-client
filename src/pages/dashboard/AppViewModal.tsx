@@ -1,6 +1,7 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { IAppData } from "../admin/AppsManagement";
 import { IApp } from "./MyAppsPage";
+import { useUser } from "@/contexts/UserContext";
 
 interface AppViewModalProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ export default function AppViewModal({
   onClose,
   app,
 }: AppViewModalProps) {
+  const { user } = useUser();
   const handleClose = () => {
     onClose();
   };
@@ -25,7 +27,7 @@ export default function AppViewModal({
           allow="clipboard-write"
           src={`${import.meta.env.VITE_BASE_URL}/wall/?placementID=${
             app?.api_key
-          }&sid=1`}
+          }&sid=${user?.id}`}
           className="w-full h-full"
         />
       </DialogContent>
