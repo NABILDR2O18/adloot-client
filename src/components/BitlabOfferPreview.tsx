@@ -197,17 +197,7 @@ export function BitlabOfferPreview({
                       <span className="text-gray-700">{offerEvent.name}</span>
                     </div>
                     <div className="font-medium text-gray-900">
-                      +
-                      {`${(
-                        calculateCampaignDistribution(
-                          Number(offerEvent?.payout),
-                          Number(0),
-                          Number(app?.split_to_user),
-                          promo
-                        )?.userShare * Number(app?.conversion_rate)
-                      )?.toFixed(Number(app?.currency_reward_rounding))} ${
-                        app?.currency_name_plural
-                      }`}
+                      +{`${offerEvent?.points} ${app?.currency_name_plural}`}
                     </div>
                   </div>
                 ))}

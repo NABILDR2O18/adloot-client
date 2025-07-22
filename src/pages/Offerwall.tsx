@@ -419,27 +419,6 @@ export default function Offerwall() {
 
   const promo = getPromotionBonusMultiplier(app?.promotion);
 
-  // Sum up bitlab payouts and points
-  function calculatePointsAndPayout(offers: IBitlabOffer[]): {
-    points: number;
-    payout: number;
-  } {
-    let totalPoints = 0;
-    let totalPayout = 0;
-
-    offers.forEach((offer) => {
-      offer.events.forEach((event) => {
-        totalPoints += parseInt(event.points || "0", 10);
-        totalPayout += parseFloat(event.payout || "0");
-      });
-    });
-
-    return {
-      points: totalPoints,
-      payout: totalPayout,
-    };
-  }
-
   return (
     <section className="min-h-screen bg-gray-50">
       <Helmet>
@@ -711,13 +690,6 @@ export default function Offerwall() {
               ))}
               {bitlabOffers?.map((offer) => {
                 const output = getOfferPointsAndPayout(offer?.events);
-                const userShare =
-                  calculateCampaignDistribution(
-                    Number(output?.payout),
-                    Number(0),
-                    Number(app?.split_to_user),
-                    promo
-                  )?.userShare * Number(app?.conversion_rate);
                 return (
                   <Card
                     key={offer?.id}
@@ -773,10 +745,7 @@ export default function Offerwall() {
                     >
                       <div className="flex items-center gap-1">
                         <span className="font-semibold text-sm md:text-base">
-                          +
-                          {userShare?.toFixed(
-                            Number(app?.currency_reward_rounding)
-                          )}
+                          +{output?.points}
                         </span>
                         <img
                           src={app?.currency_logo}
@@ -969,13 +938,6 @@ export default function Offerwall() {
               ))}
               {bitlabOffers?.map((offer) => {
                 const output = getOfferPointsAndPayout(offer?.events);
-                const userShare =
-                  calculateCampaignDistribution(
-                    Number(output?.payout),
-                    Number(0),
-                    Number(app?.split_to_user),
-                    promo
-                  )?.userShare * Number(app?.conversion_rate);
                 return (
                   <Card
                     key={offer?.id}
@@ -1022,10 +984,7 @@ export default function Offerwall() {
                     >
                       <div className="flex items-center gap-1">
                         <span className="font-semibold text-sm md:text-base">
-                          +
-                          {userShare?.toFixed(
-                            Number(app?.currency_reward_rounding)
-                          )}
+                          +{output?.points}
                         </span>
                         <img
                           src={app?.currency_logo}
@@ -1152,13 +1111,6 @@ export default function Offerwall() {
               ))}
               {bitlabOffers?.map((offer) => {
                 const output = getOfferPointsAndPayout(offer?.events);
-                const userShare =
-                  calculateCampaignDistribution(
-                    Number(output?.payout),
-                    Number(0),
-                    Number(app?.split_to_user),
-                    promo
-                  )?.userShare * Number(app?.conversion_rate);
                 return (
                   <Card
                     key={offer?.id}
@@ -1205,10 +1157,7 @@ export default function Offerwall() {
                     >
                       <div className="flex items-center gap-1">
                         <span className="font-semibold text-sm md:text-base">
-                          +
-                          {userShare?.toFixed(
-                            Number(app?.currency_reward_rounding)
-                          )}
+                          +{output?.points}
                         </span>
                         <img
                           src={app?.currency_logo}
