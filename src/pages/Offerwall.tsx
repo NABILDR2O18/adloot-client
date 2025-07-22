@@ -623,7 +623,7 @@ export default function Offerwall() {
               </Button>
             )}
           </div>
-          {offers?.length > 0 && (
+          {(offers?.length > 0 || bitlabOffers?.length > 0) && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
               {offers?.map((offer) => (
                 <Card
@@ -644,7 +644,7 @@ export default function Offerwall() {
                         )}
                       </div>
                       <div className="flex-1">
-                        <h4 className="font-medium text-sm md:text-base text-gray-900 capitalize">
+                        <h4 className="font-medium text-sm md:text-base text-gray-900 capitalize min-h-[48px]">
                           {offer?.campaign_name}
                         </h4>
                         <div className="flex items-center gap-1 md:gap-2 text-xs text-gray-500 flex-wrap mt-1">
@@ -709,74 +709,6 @@ export default function Offerwall() {
                   </CardFooter>
                 </Card>
               ))}
-            </div>
-          )}
-
-          {/* <h1 className="font-semibold mt-6">New Offers By Bitlab</h1>
-          <div className="flex flex-col md:flex-row justify-end gap-3 mb-4 md:mb-6">
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="isGame"
-                checked={isGame}
-                onCheckedChange={(checked) => setIsGame(checked === true)}
-                className="bg-gray-200 text-purple-600 data-[state=checked]:bg-purple-600 data-[state=checked]:text-white"
-              />
-              <Label
-                htmlFor="isGame"
-                className="text-sm font-normal text-gray-900"
-              >
-                Is Game
-              </Label>
-            </div>
-            <div className="w-full md:w-40">
-              <Select
-                value={bitlabDevice}
-                onValueChange={(e) => {
-                  setBitlabDevice(e);
-                }}
-              >
-                <SelectTrigger className="flex items-center gap-2 bg-white border-gray-200">
-                  <SelectValue placeholder="Filter by device" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="smartphone">Smartphone</SelectItem>
-                  <SelectItem value="tablet">Tablet</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="w-full md:w-40">
-              <Select
-                value={bitlabCategory}
-                onValueChange={(value) => setBitlabCategory(value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Filter by vertical" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={"CPE"}>CPE</SelectItem>
-                  <SelectItem value={"iPad"}>iPad</SelectItem>
-                  <SelectItem value={"iPhone"}>iPhone</SelectItem>
-                  <SelectItem value={"Android"}>Android</SelectItem>
-                  <SelectItem value={"Free"}>Free</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            {(bitlabDevice || bitlabCategory) && (
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => {
-                  setBitlabDevice("");
-                  setBitlabCategory("");
-                  setIsGame(false);
-                }}
-              >
-                <CircleX className="w-4 h-4" />
-              </Button>
-            )}
-          </div> */}
-          {bitlabOffers?.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mt-4">
               {bitlabOffers?.map((offer) => {
                 const output = getOfferPointsAndPayout(offer?.events);
                 const userShare =
@@ -873,13 +805,77 @@ export default function Offerwall() {
             </div>
           )}
 
+          {/* <h1 className="font-semibold mt-6">New Offers By Bitlab</h1>
+          <div className="flex flex-col md:flex-row justify-end gap-3 mb-4 md:mb-6">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="isGame"
+                checked={isGame}
+                onCheckedChange={(checked) => setIsGame(checked === true)}
+                className="bg-gray-200 text-purple-600 data-[state=checked]:bg-purple-600 data-[state=checked]:text-white"
+              />
+              <Label
+                htmlFor="isGame"
+                className="text-sm font-normal text-gray-900"
+              >
+                Is Game
+              </Label>
+            </div>
+            <div className="w-full md:w-40">
+              <Select
+                value={bitlabDevice}
+                onValueChange={(e) => {
+                  setBitlabDevice(e);
+                }}
+              >
+                <SelectTrigger className="flex items-center gap-2 bg-white border-gray-200">
+                  <SelectValue placeholder="Filter by device" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="smartphone">Smartphone</SelectItem>
+                  <SelectItem value="tablet">Tablet</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="w-full md:w-40">
+              <Select
+                value={bitlabCategory}
+                onValueChange={(value) => setBitlabCategory(value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Filter by vertical" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={"CPE"}>CPE</SelectItem>
+                  <SelectItem value={"iPad"}>iPad</SelectItem>
+                  <SelectItem value={"iPhone"}>iPhone</SelectItem>
+                  <SelectItem value={"Android"}>Android</SelectItem>
+                  <SelectItem value={"Free"}>Free</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            {(bitlabDevice || bitlabCategory) && (
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => {
+                  setBitlabDevice("");
+                  setBitlabCategory("");
+                  setIsGame(false);
+                }}
+              >
+                <CircleX className="w-4 h-4" />
+              </Button>
+            )}
+          </div> */}
+
           {bitlabOffers?.length === 0 && offers?.length === 0 && (
             <Card className="flex flex-col gap-2 pt-6 md:max-w-96 mx-auto mt-8 shadow-xl bg-muted/40 animate-fade-in">
               <CardContent className="flex justify-center flex-col items-center">
                 <span className="text-gray-500 text-5xl">💬</span>
                 <p className="italic text-sm md:text-base text-center mt-4">
-                  No new offers available. Please check
-                  back later — we’re always updating with fresh ways to earn!
+                  No new offers available. Please check back later — we’re
+                  always updating with fresh ways to earn!
                 </p>
               </CardContent>
             </Card>
@@ -892,7 +888,7 @@ export default function Offerwall() {
         >
           <h1 className="font-semibold mb-4">My Offers</h1>
 
-          {offers?.length > 0 && (
+          {(offers?.length > 0 || bitlabOffers?.length > 0) && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
               {offers?.map((offer) => (
                 <Card
@@ -913,7 +909,7 @@ export default function Offerwall() {
                         )}
                       </div>
                       <div className="flex-1">
-                        <h4 className="font-medium text-sm md:text-base text-gray-900 capitalize">
+                        <h4 className="font-medium text-sm md:text-base text-gray-900 capitalize min-h-[48px]">
                           {offer?.campaign_name}
                         </h4>
                         <div className="flex items-center gap-1 md:gap-2 text-xs text-gray-500 flex-wrap mt-1">
@@ -971,10 +967,6 @@ export default function Offerwall() {
                   </CardFooter>
                 </Card>
               ))}
-            </div>
-          )}
-          {bitlabOffers?.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mt-4">
               {bitlabOffers?.map((offer) => {
                 const output = getOfferPointsAndPayout(offer?.events);
                 const userShare =
@@ -1080,7 +1072,7 @@ export default function Offerwall() {
           className="p-4 overflow-auto flex-1 min-h-[500px]"
         >
           <h1 className="font-semibold mb-4">Rewarded Offers</h1>
-          {offers?.length > 0 && (
+          {(offers?.length > 0 || bitlabOffers?.length > 0) && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
               {offers?.map((offer) => (
                 <Card
@@ -1101,7 +1093,7 @@ export default function Offerwall() {
                         )}
                       </div>
                       <div className="flex-1">
-                        <h4 className="font-medium text-sm md:text-base text-gray-900 capitalize">
+                        <h4 className="font-medium text-sm md:text-base text-gray-900 capitalize min-h-[48px]">
                           {offer?.campaign_name}
                         </h4>
                         <div className="flex items-center gap-1 md:gap-2 text-xs text-gray-500 flex-wrap mt-1">
@@ -1158,10 +1150,6 @@ export default function Offerwall() {
                   </CardFooter>
                 </Card>
               ))}
-            </div>
-          )}
-          {bitlabOffers?.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mt-4">
               {bitlabOffers?.map((offer) => {
                 const output = getOfferPointsAndPayout(offer?.events);
                 const userShare =
