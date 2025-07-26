@@ -210,7 +210,7 @@ export default function CampaignsPage() {
         <div className="mt-6 bg-yellow-50 border border-yellow-200 p-4 rounded-md">
           <p className="font-semibold text-yellow-800">IMPORTANT!</p>
           <p className="font-medium text-yellow-800 mt-2">
-            You cam create campaign only when you will have funds in your
+            You can create campaign only when you will have funds in your
             account deposited.
           </p>
         </div>
