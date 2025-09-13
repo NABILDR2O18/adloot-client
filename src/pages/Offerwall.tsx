@@ -6,7 +6,6 @@ import {
   CircleX,
   Home,
   ImageIcon,
-  Infinity as InfinityIcon,
   List,
   Monitor,
 } from "lucide-react";
@@ -32,7 +31,6 @@ import { getPromotionBonusMultiplier } from "@/utils/getPromotionBonus";
 import { Helmet } from "react-helmet-async";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { BitlabOfferPreview } from "@/components/BitlabOfferPreview";
 
 export type IPInfoResponse = {
   ip: string | null;
@@ -73,102 +71,6 @@ export interface PromotionConfig {
   updated_at: string;
 }
 
-export type ILootablyOffer = {
-  type: "singlestep" | "multistep" | string;
-  name: string;
-  description: string;
-  image: string;
-  countries: string[];
-  offerID: string;
-  categories: string[];
-  devices: string[];
-  link: string;
-  conversionRate: number;
-  extraCreatives: { type: string; url: string }[]; // Replace `any` with a specific creative type if needed
-  paymentModel: string;
-  statistics: {
-    uniqueUserCompletionsThisMonth: number;
-    epc: number;
-  };
-  probableTrackingTelemetry: boolean;
-
-  // Single step specific
-  revenue?: string;
-  currencyReward?: string;
-  multipleConversionsAllowed?: boolean;
-
-  // Multi step specific
-  goals?: {
-    goalID: string;
-    description: string;
-    revenue: number;
-    currencyReward: number;
-    isOptional: boolean;
-  }[];
-  previewURL?: string;
-  bundlePackageID?: string;
-  appStoreCategories?: string[];
-  appStoreDescription?: string;
-};
-
-export type IBitlabOffer = {
-  anchor: string;
-  app_metadata: {
-    app_id: string;
-    categories: string[];
-    screenshot_urls: string[];
-    video_urls: string[];
-  };
-  categories: string[];
-  click_url: string;
-  country_stats: {
-    country_code: string;
-    desktop_rank: number;
-    mobile_rank: number;
-  }[];
-  description: string;
-  device_targeting: {
-    browsers: string[];
-    devices: string[];
-    operating_systems: {
-      min_version: string;
-      name: string;
-    }[];
-    platforms: {
-      name: string;
-    }[];
-  };
-  epc: string;
-  events: {
-    id: string;
-    is_cpc: boolean;
-    multiple_conversions_allowed: boolean;
-    name: string;
-    payout: string;
-    payout_type: string;
-    points: string;
-    translations: Record<string, unknown>;
-    type_id: number;
-  }[];
-  geo_targeting: {
-    cities: string[];
-    countries: {
-      country_code: string;
-    }[];
-    postal_codes: string[];
-    states: string[];
-  };
-  icon: string;
-  id: number;
-  is_game: boolean;
-  name: string;
-  pending_time: number;
-  preview_url: string;
-  requirements: string;
-  support_url: string;
-  translations: Record<string, unknown> | null;
-};
-
 // eslint-disable-next-line react-refresh/only-export-components
 export function getOfferPointsAndPayout(
   events: {
@@ -203,20 +105,13 @@ export default function Offerwall() {
   const [location, setLocation] = useState<IPInfoResponse | null>(null);
   const [offers, setOffers] = useState<Campaign[]>([]);
   const [device, setDevice] = useState<string>("");
-  const [bitlabDevice, setBitlabDevice] = useState<string>("");
   const [isGame, setIsGame] = useState(true);
   const [payout, setPayout] = useState<string>("");
   const [category, setCategory] = useState<string>("");
-  const [bitlabCategory, setBitlabCategory] = useState<string>("");
   const [app, setApp] = useState<PromotionConfig | null>(null);
   const [showOfferPreviewModal, setShowOfferPreviewModal] =
     useState<boolean>(false);
-  const [showBitlabOfferPreviewModal, setBitlabShowOfferPreviewModal] =
-    useState<boolean>(false);
   const [selectedOffer, setSelectedOffer] = useState<Campaign | null>(null);
-  const [selectedBitlabOffer, setBitlabSelectedOffer] =
-    useState<IBitlabOffer | null>(null);
-  const [bitlabOffers, setBitlabOffers] = useState<IBitlabOffer[]>([]);
 
   useEffect(() => {
     const fetchGeoIpLocation = async () => {
@@ -269,13 +164,9 @@ export default function Offerwall() {
           device,
           sort: payout,
           ip: location?.ip,
-          // is_game: isGame,
-          // bitlab_categories: bitlabCategory, // CPE, iPad, iPhone, Android
-          // bitlab_platforms: bitlabDevice, // smartphone, tablet
         }); // your endpoint here
         if (response.status === 200) {
           setOffers(response?.data?.data?.offers);
-          setBitlabOffers(response?.data?.data?.bitlab_offers);
         }
       } catch (error) {
         console.error("Validation failed:", error);
@@ -294,7 +185,6 @@ export default function Offerwall() {
         }); // your endpoint here
         if (response.status === 200) {
           setOffers(response?.data?.data?.offers);
-          setBitlabOffers(response?.data?.data?.bitlab_offers);
         }
       } catch (error) {
         console.error("Validation failed:", error);
@@ -313,7 +203,6 @@ export default function Offerwall() {
         });
         if (response.status === 200) {
           setOffers(response?.data?.data?.offers);
-          setBitlabOffers(response?.data?.data?.bitlab_offers);
         }
       } catch (error) {
         console.error("Validation failed:", error);
@@ -334,9 +223,6 @@ export default function Offerwall() {
     category,
     currentTab,
     payout,
-    bitlabDevice,
-    // isGame,
-    bitlabCategory,
   ]);
 
   // useEffect(() => {
@@ -399,17 +285,13 @@ export default function Offerwall() {
     );
   }
 
-  const startOfferByClick = async (
-    offerId: number | string,
-    isBitlab?: boolean
-  ) => {
+  const startOfferByClick = async (offerId: number | string) => {
     try {
       await api.post("/public/wall/offers/click", {
         apiKey: placementID,
         userId: sid,
         offerId,
         country: location?.country,
-        isBitlab: isBitlab === true,
         ip: location?.ip,
       }); // your endpoint here
     } catch (error) {
@@ -602,7 +484,7 @@ export default function Offerwall() {
               </Button>
             )}
           </div>
-          {(offers?.length > 0 || bitlabOffers?.length > 0) && (
+          {offers?.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
               {offers?.map((offer) => (
                 <Card
@@ -688,157 +570,10 @@ export default function Offerwall() {
                   </CardFooter>
                 </Card>
               ))}
-              {bitlabOffers?.map((offer) => {
-                const output = getOfferPointsAndPayout(offer?.events);
-                return (
-                  <Card
-                    key={offer?.id}
-                    className="overflow-hidden border border-gray-200 cursor-pointer hover:shadow-md transition-shadow"
-                  >
-                    <CardContent className="p-3 md:p-4">
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400">
-                          {offer?.icon ? (
-                            <img
-                              src={offer?.icon}
-                              alt={offer?.name}
-                              className="w-full h-full rounded-md overflow-hidden object-cover"
-                            />
-                          ) : (
-                            <ImageIcon size={20} />
-                          )}
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-medium text-sm md:text-base text-gray-900 capitalize min-h-[48px]">
-                            {offer?.name}
-                          </h4>
-                          <div className="flex items-center gap-1 md:gap-2 text-xs text-gray-500 flex-wrap mt-1">
-                            {offer?.device_targeting?.platforms?.map(
-                              (device) => {
-                                return (
-                                  <Badge
-                                    variant="secondary"
-                                    className="px-1.5 py-0 text-[10px] md:text-xs bg-gray-100 text-gray-700 capitalize"
-                                    key={device?.name}
-                                  >
-                                    {device?.name === "smartphone"
-                                      ? "🤖 Android"
-                                      : `⌘ ${device?.name}`}
-                                  </Badge>
-                                );
-                              }
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                    <CardFooter
-                      onClick={() => {
-                        startOfferByClick(offer?.id, true);
-                        setBitlabSelectedOffer(offer);
-                        setBitlabShowOfferPreviewModal(true);
-                      }}
-                      className="text-white p-1.5 md:p-2 flex justify-center"
-                      style={{
-                        backgroundColor: app?.design_secondary_color,
-                      }}
-                    >
-                      <div className="flex items-center gap-1">
-                        <span className="font-semibold text-sm md:text-base">
-                          +{output?.points}
-                        </span>
-                        <img
-                          src={app?.currency_logo}
-                          alt={app?.currency_name_plural}
-                          className="object-contain overflow-hidden w-[20px] h-[20px]"
-                        />
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M12 18V6"></path>
-                          <path d="M5 12l7-6 7 6"></path>
-                        </svg>
-                      </div>
-                    </CardFooter>
-                  </Card>
-                );
-              })}
             </div>
           )}
 
-          {/* <h1 className="font-semibold mt-6">New Offers By Bitlab</h1>
-          <div className="flex flex-col md:flex-row justify-end gap-3 mb-4 md:mb-6">
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="isGame"
-                checked={isGame}
-                onCheckedChange={(checked) => setIsGame(checked === true)}
-                className="bg-gray-200 text-purple-600 data-[state=checked]:bg-purple-600 data-[state=checked]:text-white"
-              />
-              <Label
-                htmlFor="isGame"
-                className="text-sm font-normal text-gray-900"
-              >
-                Is Game
-              </Label>
-            </div>
-            <div className="w-full md:w-40">
-              <Select
-                value={bitlabDevice}
-                onValueChange={(e) => {
-                  setBitlabDevice(e);
-                }}
-              >
-                <SelectTrigger className="flex items-center gap-2 bg-white border-gray-200">
-                  <SelectValue placeholder="Filter by device" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="smartphone">Smartphone</SelectItem>
-                  <SelectItem value="tablet">Tablet</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="w-full md:w-40">
-              <Select
-                value={bitlabCategory}
-                onValueChange={(value) => setBitlabCategory(value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Filter by vertical" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={"CPE"}>CPE</SelectItem>
-                  <SelectItem value={"iPad"}>iPad</SelectItem>
-                  <SelectItem value={"iPhone"}>iPhone</SelectItem>
-                  <SelectItem value={"Android"}>Android</SelectItem>
-                  <SelectItem value={"Free"}>Free</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            {(bitlabDevice || bitlabCategory) && (
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => {
-                  setBitlabDevice("");
-                  setBitlabCategory("");
-                  setIsGame(false);
-                }}
-              >
-                <CircleX className="w-4 h-4" />
-              </Button>
-            )}
-          </div> */}
-
-          {bitlabOffers?.length === 0 && offers?.length === 0 && (
+          {offers?.length === 0 && (
             <Card className="flex flex-col gap-2 pt-6 md:max-w-96 mx-auto mt-8 shadow-xl bg-muted/40 animate-fade-in">
               <CardContent className="flex justify-center flex-col items-center">
                 <span className="text-gray-500 text-5xl">💬</span>
@@ -857,7 +592,7 @@ export default function Offerwall() {
         >
           <h1 className="font-semibold mb-4">My Offers</h1>
 
-          {(offers?.length > 0 || bitlabOffers?.length > 0) && (
+          {offers?.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
               {offers?.map((offer) => (
                 <Card
@@ -936,83 +671,9 @@ export default function Offerwall() {
                   </CardFooter>
                 </Card>
               ))}
-              {bitlabOffers?.map((offer) => {
-                const output = getOfferPointsAndPayout(offer?.events);
-                return (
-                  <Card
-                    key={offer?.id}
-                    className="overflow-hidden border border-gray-200 cursor-pointer hover:shadow-md transition-shadow"
-                  >
-                    <CardContent className="p-3 md:p-4">
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400">
-                          {offer?.icon ? (
-                            <img
-                              src={offer?.icon}
-                              alt={offer?.name}
-                              className="w-full h-full rounded-md overflow-hidden object-cover"
-                            />
-                          ) : (
-                            <ImageIcon size={20} />
-                          )}
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-medium text-sm md:text-base text-gray-900 capitalize min-h-[48px]">
-                            {offer?.name}
-                          </h4>
-                          <div className="flex items-center gap-1 md:gap-2 text-xs text-gray-500 flex-wrap mt-1">
-                            <Badge
-                              variant="secondary"
-                              className="px-1.5 py-0 text-[10px] md:text-xs bg-gray-100 text-gray-700 capitalize"
-                            >
-                              Started
-                            </Badge>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                    <CardFooter
-                      onClick={() => {
-                        startOfferByClick(offer?.id, true);
-                        setBitlabSelectedOffer(offer);
-                        setBitlabShowOfferPreviewModal(true);
-                      }}
-                      className="text-white p-1.5 md:p-2 flex justify-center"
-                      style={{
-                        backgroundColor: app?.design_secondary_color,
-                      }}
-                    >
-                      <div className="flex items-center gap-1">
-                        <span className="font-semibold text-sm md:text-base">
-                          +{output?.points}
-                        </span>
-                        <img
-                          src={app?.currency_logo}
-                          alt={app?.currency_name_plural}
-                          className="object-contain overflow-hidden w-[20px] h-[20px]"
-                        />
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M12 18V6"></path>
-                          <path d="M5 12l7-6 7 6"></path>
-                        </svg>
-                      </div>
-                    </CardFooter>
-                  </Card>
-                );
-              })}
             </div>
           )}
-          {bitlabOffers?.length === 0 && offers?.length === 0 && (
+          {offers?.length === 0 && (
             <Card className="flex flex-col gap-2 pt-6 md:max-w-96 mx-auto mt-8 shadow-xl bg-muted/40 animate-fade-in">
               <CardContent className="flex justify-center flex-col items-center">
                 <span className="text-gray-500 text-5xl">💬</span>
@@ -1031,7 +692,7 @@ export default function Offerwall() {
           className="p-4 overflow-auto flex-1 min-h-[500px]"
         >
           <h1 className="font-semibold mb-4">Rewarded Offers</h1>
-          {(offers?.length > 0 || bitlabOffers?.length > 0) && (
+          {offers?.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
               {offers?.map((offer) => (
                 <Card
@@ -1109,84 +770,10 @@ export default function Offerwall() {
                   </CardFooter>
                 </Card>
               ))}
-              {bitlabOffers?.map((offer) => {
-                const output = getOfferPointsAndPayout(offer?.events);
-                return (
-                  <Card
-                    key={offer?.id}
-                    className="overflow-hidden border border-gray-200 cursor-pointer hover:shadow-md transition-shadow"
-                  >
-                    <CardContent className="p-3 md:p-4">
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400">
-                          {offer?.icon ? (
-                            <img
-                              src={offer?.icon}
-                              alt={offer?.name}
-                              className="w-full h-full rounded-md overflow-hidden object-cover"
-                            />
-                          ) : (
-                            <ImageIcon size={20} />
-                          )}
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-medium text-sm md:text-base text-gray-900 capitalize min-h-[48px]">
-                            {offer?.name}
-                          </h4>
-                          <div className="flex items-center gap-1 md:gap-2 text-xs text-gray-500 flex-wrap mt-1">
-                            <Badge
-                              variant="secondary"
-                              className="px-1.5 py-0 text-[10px] md:text-xs bg-black text-white capitalize"
-                            >
-                              Completed
-                            </Badge>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                    <CardFooter
-                      onClick={() => {
-                        startOfferByClick(offer?.id, true);
-                        setBitlabSelectedOffer(offer);
-                        setBitlabShowOfferPreviewModal(true);
-                      }}
-                      className="text-white p-1.5 md:p-2 flex justify-center"
-                      style={{
-                        backgroundColor: app?.design_secondary_color,
-                      }}
-                    >
-                      <div className="flex items-center gap-1">
-                        <span className="font-semibold text-sm md:text-base">
-                          +{output?.points}
-                        </span>
-                        <img
-                          src={app?.currency_logo}
-                          alt={app?.currency_name_plural}
-                          className="object-contain overflow-hidden w-[20px] h-[20px]"
-                        />
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M12 18V6"></path>
-                          <path d="M5 12l7-6 7 6"></path>
-                        </svg>
-                      </div>
-                    </CardFooter>
-                  </Card>
-                );
-              })}
             </div>
           )}
 
-          {bitlabOffers?.length === 0 && offers?.length === 0 && (
+          {offers?.length === 0 && (
             <Card className="flex flex-col gap-2 pt-6 md:max-w-96 mx-auto mt-8 shadow-xl bg-muted/40 animate-fade-in">
               <CardContent className="flex justify-center flex-col items-center">
                 <span className="text-gray-500 text-5xl">💬</span>
@@ -1213,21 +800,6 @@ export default function Offerwall() {
         userId={sid}
         location={location}
         promo={promo}
-      />
-
-      <BitlabOfferPreview
-        isOpen={showBitlabOfferPreviewModal}
-        onClose={() => {
-          setBitlabShowOfferPreviewModal(false);
-          setBitlabSelectedOffer(null);
-        }}
-        offer={selectedBitlabOffer}
-        app={app}
-        apiKey={placementID}
-        userId={sid}
-        location={location}
-        promo={promo}
-        ip={location?.ip}
       />
     </section>
   );
