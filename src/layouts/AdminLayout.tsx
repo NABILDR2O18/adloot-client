@@ -315,6 +315,21 @@ export default function AdminLayout() {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <Link
+                      to="/admin/integrations"
+                      className={
+                        isActivePath("/admin/settings")
+                          ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                          : ""
+                      }
+                    >
+                      <Settings size={20} />
+                      <span>Integrations</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link
                       to="/admin/settings"
                       className={
                         isActivePath("/admin/settings")

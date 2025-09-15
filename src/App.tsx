@@ -101,6 +101,7 @@ import JobApply from "./pages/JobApply";
 import JobApplications from "./pages/admin/JobApplications";
 import JobApplicationDetails from "./pages/admin/JobApplicationDetails";
 import ForgetPassword from "./pages/ForgetPassword";
+import Integrations from "./pages/admin/Integrations";
 
 const AppRoutes = () => {
   return (
@@ -176,6 +177,7 @@ const AppRoutes = () => {
           path="jobs/applications/:id"
           element={<JobApplicationDetails />}
         />
+        <Route path="integrations" element={<Integrations />} />
         <Route path="settings" element={<SystemSettings />} />
         <Route path="profile" element={<AdminProfile />} />
       </Route>
