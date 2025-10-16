@@ -28,6 +28,9 @@ import {
   AlertCircle,
   Clock,
   CircleX,
+  Pause,
+  Ban,
+  Loader2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
@@ -40,6 +43,7 @@ import {
 import api from "@/lib/axios";
 import { pageSize } from "@/constants/limit.json";
 import { useUser } from "@/contexts/UserContext";
+import toast from "react-hot-toast";
 
 type CampaignStatus = "active" | "rejected" | "pending" | "paused";
 type CampaignCategory = "games" | "utilities" | "entertainment" | "finance";
@@ -167,6 +171,7 @@ export default function CampaignsPage() {
   const [loading, setLoading] = useState(true);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [totalPages, setTotalPages] = useState(1);
+  const [isUpdating, setIsUpdating] = useState<number | null>(null);
 
   const fetchCampaigns = async () => {
     try {
@@ -202,6 +207,30 @@ export default function CampaignsPage() {
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages)
       navigate(`/advertiser/dashboard/campaigns?status=${status}&page=${page}`);
+  };
+
+  const handleStatusChange = async (id: number, status: string) => {
+    setIsUpdating(id);
+    try {
+      const response = await api.patch(`/advertiser/campaigns/${id}/status`, {
+        status,
+      });
+      if (response.status === 200) {
+        if (status === "pending") {
+          toast.success(
+            `Campaign sent for approval it will be live once approve by adloot.`
+          );
+        } else {
+          toast.success(`Campaign ${status} set successfully`);
+        }
+        fetchCampaigns();
+      }
+    } catch (error: any) {
+      console.error("Error updating campaign status:", error);
+      toast.error("Failed to update campaign status");
+    } finally {
+      setIsUpdating(null);
+    }
   };
 
   return (
@@ -323,6 +352,38 @@ export default function CampaignsPage() {
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
+                        {campaign.status === "active" && (
+                          <Button
+                            onClick={() =>
+                              handleStatusChange(campaign.id, "paused")
+                            }
+                            title="Pause"
+                            variant="destructive"
+                            size="sm"
+                            className="text-xs"
+                          >
+                            {isUpdating === campaign.id ? (
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : null}
+                            <span>Pause</span>
+                          </Button>
+                        )}
+                        {campaign.status === "paused" && (
+                          <Button
+                            onClick={() =>
+                              handleStatusChange(campaign.id, "pending")
+                            }
+                            title="Activate"
+                            variant="destructive"
+                            size="sm"
+                            className="text-xs bg-green-500 hover:bg-green-600"
+                          >
+                            {isUpdating === campaign.id ? (
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : null}
+                            <span>Activate</span>
+                          </Button>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
