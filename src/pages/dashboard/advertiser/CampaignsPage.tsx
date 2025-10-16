@@ -358,7 +358,7 @@ export default function CampaignsPage() {
                               handleStatusChange(campaign.id, "paused")
                             }
                             title="Pause"
-                            variant="destructive"
+                            variant="default"
                             size="sm"
                             className="text-xs"
                           >
@@ -382,6 +382,21 @@ export default function CampaignsPage() {
                               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             ) : null}
                             <span>Activate</span>
+                          </Button>
+                        )}
+                        {campaign.status === "rejected" && (
+                          <Button
+                            onClick={() =>
+                              handleStatusChange(campaign.id, "pending")
+                            }
+                            title="Resubmit"
+                            size="sm"
+                            className="text-xs bg-purple-500 hover:bg-purple-600"
+                          >
+                            {isUpdating === campaign.id ? (
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : null}
+                            <span>Resubmit</span>
                           </Button>
                         )}
                       </div>
