@@ -35,7 +35,7 @@ type CampaignPerformance = {
   percentChange: number;
 };
 
-type AdvertiserStats = {
+export type AdvertiserStats = {
   totalCampaigns: number;
   totalClicks: number;
   totalConversions: number;
@@ -111,37 +111,37 @@ export default function AdvertiserDashboard() {
         )}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 mt-4">
-        <StatsCard
+        <AdvertiserStatsCard
           title="Total Campaigns"
           value={stats?.totalCampaigns?.toLocaleString() || "0"}
           delta=""
           icon={<BarChart2 className="text-green-500" />}
         />
-        <StatsCard
+        <AdvertiserStatsCard
           title="Total Clicks"
           value={stats?.totalClicks?.toLocaleString() || "0"}
           delta=""
           icon={<BarChart className="text-blue-500" />}
         />
-        <StatsCard
+        <AdvertiserStatsCard
           title="Total Conversions"
           value={stats?.totalConversions?.toLocaleString() || "0"}
           delta=""
           icon={<LineChartIcon className="text-purple-500" />}
         />
-        <StatsCard
+        <AdvertiserStatsCard
           title="Conversion Rate"
           value={`${stats?.conversionRate || "0.00"}%`}
           delta=""
           icon={<LineChartIcon className="text-purple-500" />}
         />
-        <StatsCard
+        <AdvertiserStatsCard
           title="Total Spend"
           value={`$${stats?.totalSpend || "0.00"}`}
           delta=""
           icon={<DollarSignIcon className="text-purple-500" />}
         />
-        <StatsCard
+        <AdvertiserStatsCard
           title="Total Support Tickets"
           value={stats?.supportTickets?.toString() ?? "0"}
           delta=""
@@ -278,7 +278,7 @@ export default function AdvertiserDashboard() {
   );
 }
 
-interface StatsCardProps {
+interface AdvertiserStatsCardProps {
   title: string;
   value: string;
   delta: string;
@@ -286,13 +286,13 @@ interface StatsCardProps {
   icon?: React.ReactNode;
 }
 
-function StatsCard({
+export function AdvertiserStatsCard({
   title,
   value,
   delta,
   negative = false,
   icon,
-}: StatsCardProps) {
+}: AdvertiserStatsCardProps) {
   return (
     <Card>
       <CardContent className="pt-6">

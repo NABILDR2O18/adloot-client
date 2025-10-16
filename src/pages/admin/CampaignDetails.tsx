@@ -18,6 +18,11 @@ import {
   Target,
   Globe,
   CheckCircle,
+  LineChartIcon,
+  DollarSignIcon,
+  Headset,
+  BarChart,
+  CircleX,
 } from "lucide-react";
 import {
   Table,
@@ -33,17 +38,73 @@ import {
   Campaign,
   getCampaignStatusBadge,
 } from "../dashboard/advertiser/CampaignsPage";
+import {
+  AdvertiserStats,
+  AdvertiserStatsCard,
+} from "../dashboard/advertiser/AdvertiserDashboard";
+import { DatePickerWithRange } from "@/components/dashboard/DateRangePicker";
+import { DateRange } from "react-day-picker";
+
+type CampaignStats = {
+  campaign: {
+    id: number;
+    name: string;
+  };
+  totals: {
+    clicks: number;
+    conversions: number;
+    /** String percentage with 2 decimals, e.g. "12.34" */
+    conversionRate: string;
+    spend: number;
+  };
+  chart: {
+    groupBy: "day" | "month" | "year";
+    data: Array<{
+      /** ISO-like date string matching the groupBy granularity */
+      date: string;
+      clicks: number;
+      conversions: number;
+    }>;
+  };
+  periodComparison: null | {
+    currentClicks: number;
+    previousClicks: number;
+    /** Percentage change vs previous period (can be negative) */
+    percentChange: number;
+  };
+};
 
 export default function CampaignDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [campaign, setCampaign] = useState<Campaign | null>(null);
   const [loading, setLoading] = useState(true);
+  const [date, setDate] = useState<DateRange | undefined>({
+    from: undefined,
+    to: undefined,
+  });
+  const [stats, setStats] = useState<CampaignStats | null>(null);
+
+  const fetchStats = async (id: string) => {
+    try {
+      const params = {
+        from: date?.from,
+        to: date?.to,
+      };
+      const response = await api.get(`/admin/campaigns/${id}/stats`, {
+        params,
+      });
+      setStats(response?.data?.data);
+    } catch (error: any) {
+      setStats(null);
+    }
+  };
 
   const fetchCampaign = async () => {
     try {
       setLoading(true);
       const response = await api.get(`/admin/campaigns/${id}`);
+      await fetchStats(response?.data?.data?.campaign?.id);
       setCampaign(response?.data?.data?.campaign);
     } catch (error: any) {
       console.error("Error fetching campaigns:", error);
@@ -78,14 +139,60 @@ export default function CampaignDetails() {
 
   return (
     <section className="space-y-4">
-      <Button
-        variant="outline"
-        className="flex items-center gap-1"
-        onClick={() => navigate(-1)}
-      >
-        <ChevronLeft className="w-4 h-4" />
-        <span className="hidden sm:inline">Back to Campaigns</span>
-      </Button>
+      {/* Stats*/}
+      <div className="flex justify-between items-center gap-2">
+        <Button
+          variant="outline"
+          className="flex items-center gap-1"
+          onClick={() => navigate(-1)}
+        >
+          <ChevronLeft className="w-4 h-4" />
+          <span className="hidden sm:inline">Back to Campaigns</span>
+        </Button>
+        <aside className="flex items-center gap-2">
+          <DatePickerWithRange date={date} setDate={setDate} />
+          {(date?.from || date?.to) && (
+            <Button
+              onClick={() => {
+                setDate({
+                  from: undefined,
+                  to: undefined,
+                });
+              }}
+              variant="destructive"
+              size="sm"
+            >
+              <CircleX className="w-4 h-4" />
+            </Button>
+          )}
+        </aside>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 mt-4">
+        <AdvertiserStatsCard
+          title="Total Clicks"
+          value={stats?.totals?.clicks?.toLocaleString() || "0"}
+          delta=""
+          icon={<BarChart className="text-blue-500" />}
+        />
+        <AdvertiserStatsCard
+          title="Total Conversions"
+          value={stats?.totals?.conversions?.toLocaleString() || "0"}
+          delta=""
+          icon={<LineChartIcon className="text-purple-500" />}
+        />
+        <AdvertiserStatsCard
+          title="Conversion Rate"
+          value={`${stats?.totals?.conversionRate || "0.00"}%`}
+          delta=""
+          icon={<LineChartIcon className="text-purple-500" />}
+        />
+        <AdvertiserStatsCard
+          title="Total Spend"
+          value={`$${stats?.totals?.spend || "0.00"}`}
+          delta=""
+          icon={<DollarSignIcon className="text-purple-500" />}
+        />
+      </div>
 
       <Tabs defaultValue="overview">
         <TabsList className="grid w-full grid-cols-4 md:w-auto md:inline-flex">
