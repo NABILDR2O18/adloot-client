@@ -508,6 +508,12 @@ export default function Offerwall() {
                         <h4 className="font-medium text-sm md:text-base text-gray-900 capitalize min-h-[48px]">
                           {offer?.campaign_name}
                         </h4>
+                        <p>
+                           {offer?.description.length > 60
+                            ? offer?.description.substring(0, 57) + "..."
+                            : offer?.description}
+                            
+                        </p>
                         <div className="flex items-center gap-1 md:gap-2 text-xs text-gray-500 flex-wrap mt-1">
                           {offer?.devices?.map((device) => {
                             return (
