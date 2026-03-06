@@ -7,9 +7,12 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    allowedHosts: ["adloot.io", "www.adloot.io"],
   },
   preview: {
-    allowedHosts: ["all"],
+    host: "::",
+    port: 8080,
+    allowedHosts: ["adloot.io", "www.adloot.io"],
   },
   plugins: [react()].filter(Boolean),
   resolve: {
