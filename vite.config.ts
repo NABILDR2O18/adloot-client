@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   preview: {
-    allowedHosts: ["adloot.io"],
+    allowedHosts: ["all"],
   },
   plugins: [react()].filter(Boolean),
   resolve: {
